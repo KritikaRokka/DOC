@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════
+   DOS CURAÇAO — DEDICATED MOBILE LAYOUTS  (≤ 767px)
+   Desktop = cinematic. Mobile = simplified premium.
+   Loaded LAST. Every rule is gated to phones; desktop untouched.
+   Strategy: kill absolute-positioned overlaps, stack with
+   Flexbox/Grid, trim mockups ~25%, tighten vertical rhythm.
+═══════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  /* ── Global rhythm: trim excessive vertical spacing ── */
+  .pp2, .pp3, .pp4, .pp5, .pp6, .pp7, .pp8, .pp9, .pp10 {
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+  .pp2-head, .pp3-head, .pp4-head, .pp5-head,
+  .pp6-head, .pp7-head, .pp8-head, .pp9-head, .pp10-head { margin-bottom: 34px !important; }
+
+  /* PP-10 telemetry → 2 columns; keep spine aligned to icon centre */
+  .pp10-telemetry { grid-template-columns: 1fr 1fr !important; }
+  .pp10-lane { padding: 14px 16px; gap: 13px; }
+  .pp10-spine { left: 41px; }
+  .pp10-spine-pulse { left: 36px; }
+  .pp10-lane-ic { width: 48px; height: 48px; }
+  .pp10-lane-badge { font-size: 8px; padding: 3px 8px; }
+  .site-cta { padding-top: 24px !important; }
+
+  /* ════════════════════════════════════════════
+     HERO (PP-1) — stack the living product
+     Replace the cinematic absolute composition with a
+     clean vertical stack: phone → dashboard → live chips.
+  ════════════════════════════════════════════ */
+  .hero { min-height: auto !important; }
+  .hero > .relative.z-10 { padding-top: 96px !important; padding-bottom: 56px !important; }
+
+  .hero-product {
+    position: relative !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 10px;
+  }
+  /* neutralise absolute positioning inside the product (keep transforms so GSAP entrances still play) */
+  .hero-product > * { position: static !important; }
+  /* hide the scattered floating annotations (only legible in the cinematic layout) */
+  .product-glow, .rfid-reader, .confirm-card, .cloud-node,
+  .live-toast, .tap-hint, .data-flow { display: none !important; }
+  /* keep the two key proofs + the live counters, stacked */
+  .phone { width: 128px !important; height: 260px !important; margin: 0 !important; }
+  .dash-fragment { width: 100% !important; max-width: 340px; }
+  .float-chip { width: 100% !important; max-width: 340px; justify-content: flex-start; }
+
+  /* ════════════════════════════════════════════
+     PP-3 — ecosystem → vertical stacked list
+  ════════════════════════════════════════════ */
+  .pp3-eco {
+    height: auto !important;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 12px; padding: 26px 16px;
+  }
+  .pp3-lines { display: none !important; }          /* connection web doesn't read when stacked */
+  .pp3-fcard { display: none !important; }           /* corner cards duplicate the metrics row below */
+  .pp3-center-wrap, .pp3-school, .pp3-node {
+    position: static !important; transform: none !important;
+  }
+  .pp3-center-wrap { order: -1; margin-bottom: 4px; }
+  .pp3-school, .pp3-node { width: 100%; max-width: 320px; }
+  .pp3-school-inner, .pp3-node-inner { width: 100%; }
+
+  /* ════════════════════════════════════════════
+     PP-4 — media annotations + journey line
+  ════════════════════════════════════════════ */
+  .pp4-confirm { display: none !important; }          /* 4 corner cards overlap the small video */
+  .pp4-track, .pp4-packet { display: none !important; } /* horizontal line only fits the 6-across row */
+  .pp4-journey { margin-bottom: 48px !important; }
+  .pp4-media { margin-bottom: 40px !important; }
+
+  /* ════════════════════════════════════════════
+     PP-5 — trim mockup + keep timeline legible
+  ════════════════════════════════════════════ */
+  .pp5-bigphone--m { transform: scale(0.92); transform-origin: top center; }
+  .pp5-tl-track, .pp5-tl-fill { display: none !important; }
+  .pp5-tl-steps { display: grid !important; grid-template-columns: 1fr 1fr; gap: 16px 10px; }
+  .pp5-tl-step { flex-direction: row !important; align-items: center; gap: 10px; text-align: left; }
+
+  /* ════════════════════════════════════════════
+     PP-7 — command center: ensure clean stacking
+  ════════════════════════════════════════════ */
+  .pp7-grid { gap: 16px !important; }
+  .pp7-dash-head { flex-wrap: wrap; gap: 10px; }
+  .pp7-sgroup-loc { display: none; }                  /* keep group rows from wrapping */
+
+  /* ── Tighten the closing CTA + footer ── */
+  .site-cta-card { padding: 44px 20px !important; }
+  .site-cta-trust { gap: 10px; }
+}
+
+/* very small phones: drop hero stat chips into one column */
+@media (max-width: 380px) {
+  .pp5-tl-steps { grid-template-columns: 1fr; }
+}

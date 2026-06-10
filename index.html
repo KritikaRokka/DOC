@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOS Curaçao — RFID Workforce Platform</title>
+  <meta name="description" content="A secure, mobile-first attendance ecosystem built for the future of Curaçao's education infrastructure.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            /* Single-family system — Archivo for everything, JetBrains Mono = technical accent */
+            display: ['Archivo', 'sans-serif'],
+            body: ['Archivo', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            /* DOS official brand — solid, full color */
+            dosblue:   '#0852A7',
+            dosyellow: '#F8CB0C',
+            dosred:    '#D72024',
+            /* light surfaces */
+            paper:     '#FFFFFF',
+            mist:      '#F4F7FB',
+            wash:      '#E4EDFB',
+            cloud:     '#EAF0F8',
+            ink:       '#0A1A2F',
+            slatey:    '#5A6B82',
+            present:   '#10B981',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+
+<body class="bg-paper font-body text-ink antialiased overflow-x-hidden">
+
+  <!-- scroll progress -->
+  <div class="scroll-prog" id="scrollProg"></div>
+
+  <!-- ════════════════════════════════════════════════
+       NAVIGATION
+  ════════════════════════════════════════════════ -->
+  <nav class="fixed top-0 inset-x-0 z-50 transition-all duration-300" id="nav">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-10 h-16 md:h-[84px] flex items-center justify-between">
+      <!-- Brand lockup: official Curaçao crest + DOS wordmark -->
+      <a href="#hero" class="nav-brand flex items-center gap-3">
+        <img src="assets/logos/dos-crest-hd.png" alt="DOS — Dienst Openbare Scholen" class="h-12 md:h-[72px] w-auto">
+        <span class="flex flex-col leading-none">
+          <span class="font-display font-black text-[20px] md:text-[24px] tracking-[-0.02em] text-ink">DOS<span class="text-dosblue">.</span></span>
+          <span class="hidden sm:block font-mono text-[8.5px] md:text-[9.5px] tracking-[0.14em] uppercase text-slatey mt-[3px]">Dienst Openbare Scholen</span>
+        </span>
+      </a>
+
+      <!-- Desktop links -->
+      <div class="hidden md:flex items-center gap-0.5">
+        <a href="#network" class="nav-link">Platform</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#data-flow" class="nav-link">Technology</a>
+        <a href="#command-center" class="nav-link">Dashboard</a>
+        <a href="#vision" class="nav-cta">Request Demo</a>
+      </div>
+
+      <!-- Mobile toggle -->
+      <button class="md:hidden nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu panel -->
+    <div class="nav-mobile md:hidden" id="navMobile">
+      <a href="#network" class="nav-mlink">Platform</a>
+      <a href="#how-it-works" class="nav-mlink">How It Works</a>
+      <a href="#data-flow" class="nav-mlink">Technology</a>
+      <a href="#command-center" class="nav-mlink">Dashboard</a>
+      <a href="#vision" class="nav-mcta">Request Demo</a>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════
+       PP-1 HERO  ·  Light / Awake
+  ════════════════════════════════════════════════ -->
+  <section class="hero relative min-h-screen w-full overflow-hidden flex items-center bg-paper" id="hero">
+
+    <!-- ── Background: bright optimistic layers ── -->
+    <div class="absolute inset-0 z-0">
+      <!-- Generated hero photo (faded behind content; center kept clear for text) -->
+      <img src="assets/images/hero.jpg" alt="Teachers arriving at a modern Curaçao public school" class="hero-bg-photo absolute inset-0 w-full h-full object-cover">
+      <!-- Light wash so photo stays bright + text legible -->
+      <div class="absolute inset-0 bg-gradient-to-r from-paper via-paper/92 to-paper/60"></div>
+    </div>
+
+    <!-- ── Solid color accent shapes (no gradients) ── -->
+    <div class="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.07]"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.12]"></div>
+      <div class="dot-grid absolute inset-0 opacity-[0.5]"></div>
+    </div>
+
+    <!-- ── Content ── -->
+    <div class="relative z-10 w-full max-w-[1280px] mx-auto px-5 md:px-10 pt-28 md:pt-24 pb-28">
+      <div class="grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-8 items-center">
+
+        <!-- ─── LEFT: Copy ─── -->
+        <div class="hero-copy">
+          <!-- Badge -->
+          <div class="hero-badge inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-7">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-dosyellow opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-dosyellow"></span>
+            </span>
+            <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Dienst Openbare Scholen · Curaçao</span>
+          </div>
+
+          <!-- Headline -->
+          <h1 class="hero-headline font-display font-black text-ink leading-[0.95] tracking-[-0.035em] text-[clamp(40px,6.5vw,82px)] mb-6">
+            <span class="hl-line block">The Future of</span>
+            <span class="hl-line block">School Workforce</span>
+            <span class="hl-line block text-dosblue">Management.</span>
+          </h1>
+
+          <!-- Subheadline -->
+          <p class="hero-sub font-body text-[17px] md:text-[19px] leading-relaxed text-slatey max-w-[520px] mb-9">
+            A secure, mobile-first attendance platform that gives every teacher a simple way to check in — and gives school leadership real-time visibility across Curaçao's public schools.
+          </p>
+
+          <!-- CTAs -->
+          <div class="hero-ctas flex flex-wrap items-center gap-4 mb-12">
+            <a href="#" class="cta-primary group relative inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-dosblue text-white font-semibold text-[14px] tracking-wide overflow-hidden transition-all hover:-translate-y-0.5">
+              <span class="relative z-10">See How It Works</span>
+              <svg class="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#" class="cta-ghost inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-white border border-cloud text-ink font-semibold text-[14px] tracking-wide hover:border-dosblue/40 transition-all shadow-sm">
+              <span class="flex items-center justify-center w-5 h-5 rounded-full bg-dosyellow">
+                <svg class="w-2.5 h-2.5 ml-0.5 text-ink" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+              Watch the Demo
+            </a>
+          </div>
+
+          <!-- Key benefits -->
+          <div class="hero-stats flex flex-wrap items-center gap-x-8 gap-y-4 pt-8 border-t border-cloud">
+            <div class="stat-item flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-dosblue flex items-center justify-center shadow-md shadow-dosblue/20">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></svg>
+              </div>
+              <div>
+                <div class="font-display font-bold text-[15px] text-ink leading-none">Mobile First</div>
+                <div class="font-mono text-[10px] text-slatey tracking-wide mt-1">Tap to check in</div>
+              </div>
+            </div>
+            <div class="stat-item flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-dosyellow flex items-center justify-center shadow-md shadow-dosyellow/30">
+                <svg class="w-5 h-5 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              </div>
+              <div>
+                <div class="font-display font-bold text-[15px] text-ink leading-none">Secure &amp; Verified</div>
+                <div class="font-mono text-[10px] text-slatey tracking-wide mt-1">RFID identity</div>
+              </div>
+            </div>
+            <div class="stat-item flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-dosred flex items-center justify-center shadow-md shadow-dosred/20">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div>
+                <div class="font-display font-bold text-[15px] text-ink leading-none">Real-Time</div>
+                <div class="font-mono text-[10px] text-slatey tracking-wide mt-1">Live dashboards</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── RIGHT: Living Product ─── -->
+        <div class="hero-product relative h-[520px] md:h-[600px] flex items-center justify-center">
+
+          <!-- Soft solid glow behind product -->
+          <div class="product-glow absolute w-[440px] h-[440px] rounded-full bg-dosblue/[0.06] blur-[90px]"></div>
+
+          <!-- ── RFID Reader (wall device) — STEP 2, center ── -->
+          <!-- ASSET: replace with assets/renders/rfid-reader.png -->
+          <div class="rfid-reader absolute left-[24%] top-[6%] w-[112px] h-[140px] rounded-2xl bg-white border border-cloud shadow-xl flex flex-col items-center justify-center gap-2.5 z-20">
+            <div class="text-[8px] font-mono tracking-[0.2em] text-slatey uppercase">DOS Reader</div>
+            <!-- Pulse rings (yellow scan) -->
+            <div class="reader-core relative w-14 h-14 rounded-full bg-dosyellow/15 border-2 border-dosyellow flex items-center justify-center">
+              <div class="pulse-ring absolute inset-0 rounded-full border-2 border-dosyellow"></div>
+              <div class="pulse-ring pulse-ring--2 absolute inset-0 rounded-full border-2 border-dosyellow"></div>
+              <svg class="w-6 h-6 text-dosblue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+              </svg>
+            </div>
+            <div class="reader-status font-mono text-[8px] tracking-wider text-slatey uppercase">Ready</div>
+          </div>
+
+          <!-- ── Phone (DOS Check-In) — STEP 1, left ── -->
+          <!-- ASSET: replace .phone-screen content with assets/renders/app-checkin.png -->
+          <div class="phone absolute left-[0%] bottom-[6%] w-[140px] h-[284px] rounded-[26px] bg-white border-[3px] border-cloud shadow-2xl p-2.5 z-20">
+            <div class="w-11 h-1.5 bg-cloud rounded-full mx-auto mb-2.5 mt-1"></div>
+            <div class="phone-screen relative h-[calc(100%-22px)] rounded-[16px] overflow-hidden bg-mist flex flex-col items-center justify-center gap-3.5 px-3">
+              <div class="text-[8px] font-mono tracking-[0.18em] text-slatey uppercase">DOS Check-In</div>
+              <!-- App RFID icon (yellow scan) -->
+              <div class="phone-check relative w-[72px] h-[72px] rounded-full bg-dosyellow/15 border-2 border-dosyellow flex items-center justify-center">
+                <div class="phone-success-ring absolute inset-0 rounded-full border-[3px] border-present opacity-0"></div>
+                <svg class="phone-check-icon w-8 h-8 text-dosblue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>
+                </svg>
+                <svg class="phone-success-icon absolute w-8 h-8 text-present opacity-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <div class="text-center">
+                <div class="phone-label font-display font-bold text-[12px] text-ink">Hold Near Reader</div>
+                <div class="phone-time font-mono text-[10px] text-slatey mt-1">— : —</div>
+              </div>
+              <div class="phone-cta mt-0.5 px-5 py-2 rounded-lg bg-dosblue text-white font-semibold text-[11px]">Check In</div>
+            </div>
+          </div>
+
+          <!-- ── Floating Attendance Confirmation Card ── -->
+          <div class="confirm-card absolute left-[6%] top-[1%] z-30 flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white border border-present/30 shadow-xl opacity-0">
+            <div class="w-7 h-7 rounded-full bg-present/15 flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <div>
+              <div class="text-[11px] font-bold text-ink leading-none">Check-In Confirmed</div>
+              <div class="font-mono text-[9px] text-slatey mt-1">M. Santos · 7:45 AM</div>
+            </div>
+          </div>
+
+          <!-- ── Dashboard ("The Mirror") ── -->
+          <div class="dash-fragment absolute right-0 top-[24%] w-[310px] rounded-2xl bg-white border border-cloud shadow-2xl p-5 z-20">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="font-display font-bold text-[15px] text-ink leading-none">Director Dashboard</div>
+                <div class="font-mono text-[9px] text-slatey mt-1.5 tracking-wide">Kolegio San Hose · Today</div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-present opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-present"></span>
+                </span>
+                <span class="font-mono text-[9px] tracking-wider text-present uppercase">Live</span>
+              </div>
+            </div>
+
+            <!-- Stat row -->
+            <div class="grid grid-cols-3 gap-2 mb-4">
+              <div class="rounded-xl bg-dosblue p-2.5">
+                <div class="dash-count font-display font-extrabold text-[24px] text-white leading-none" data-target="12">0</div>
+                <div class="font-mono text-[8px] text-white/80 mt-1 tracking-wide uppercase">Present</div>
+              </div>
+              <div class="rounded-xl bg-dosyellow p-2.5">
+                <div class="font-display font-extrabold text-[24px] text-ink leading-none">1</div>
+                <div class="font-mono text-[8px] text-ink/70 mt-1 tracking-wide uppercase">Late</div>
+              </div>
+              <div class="rounded-xl bg-dosred p-2.5">
+                <div class="font-display font-extrabold text-[24px] text-white leading-none">2</div>
+                <div class="font-mono text-[8px] text-white/80 mt-1 tracking-wide uppercase">Absent</div>
+              </div>
+            </div>
+
+            <div class="font-mono text-[8px] text-slatey tracking-[0.18em] uppercase mb-2.5">Staff Overview</div>
+
+            <!-- Rows -->
+            <div class="space-y-2">
+              <div class="dash-row flex items-center gap-2.5 p-2.5 rounded-lg bg-mist">
+                <div class="w-7 h-7 rounded-full bg-dosblue flex items-center justify-center font-mono text-[10px] text-white">JR</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[11px] font-semibold text-ink truncate">J. Rodríguez</div>
+                  <div class="font-mono text-[9px] text-slatey">Checked in · 7:42 AM</div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[9px] font-mono bg-present/15 text-present">Present</span>
+              </div>
+              <!-- This row appears LIVE on tap -->
+              <div class="dash-row dash-row--live flex items-center gap-2.5 p-2.5 rounded-lg bg-dosblue/[0.06] border border-dosblue/20 opacity-0">
+                <div class="w-7 h-7 rounded-full bg-dosblue flex items-center justify-center font-mono text-[10px] text-white">MS</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[11px] font-semibold text-ink truncate">M. Santos</div>
+                  <div class="font-mono text-[9px] text-slatey">Checked in · 7:45 AM</div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[9px] font-mono bg-present/15 text-present">Present</span>
+              </div>
+              <div class="dash-row flex items-center gap-2.5 p-2.5 rounded-lg bg-mist">
+                <div class="w-7 h-7 rounded-full bg-dosyellow flex items-center justify-center font-mono text-[10px] text-ink">AV</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-[11px] font-semibold text-ink truncate">A. de Vries</div>
+                  <div class="font-mono text-[9px] text-slatey">Late arrival · 8:15 AM</div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[9px] font-mono bg-dosyellow/20 text-[#9a7d00]">Late</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Connecting data line (phone → reader → dashboard) -->
+          <!-- ── Secure Cloud node (step between reader & dashboard) ── -->
+          <div class="cloud-node absolute left-[50%] top-[1%] z-20 flex items-center gap-2 px-3 py-2 rounded-xl bg-white border border-cloud shadow-lg">
+            <div class="w-7 h-7 rounded-lg bg-dosblue/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-dosblue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+            </div>
+            <div>
+              <div class="text-[10px] font-bold text-ink leading-none">Secure Cloud</div>
+              <div class="font-mono text-[8px] text-present mt-0.5 flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-present"></span>Encrypted · Synced</div>
+            </div>
+          </div>
+
+          <!-- ── Floating chip: schools online ── -->
+          <div class="float-chip chip-schools absolute right-[4%] top-[7%] z-20 flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white border border-cloud shadow-lg">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-present opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-present"></span>
+            </span>
+            <div>
+              <div class="font-display font-extrabold text-[16px] text-ink leading-none"><span class="count-schools" data-target="68">0</span> Schools</div>
+              <div class="font-mono text-[8px] text-slatey mt-0.5 tracking-wide uppercase">Online now</div>
+            </div>
+          </div>
+
+          <!-- ── Floating chip: teachers checked in today ── -->
+          <div class="float-chip chip-teachers absolute left-[40%] bottom-[6%] z-20 flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-dosblue shadow-xl shadow-dosblue/25">
+            <div class="w-7 h-7 rounded-lg bg-white/15 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+            </div>
+            <div>
+              <div class="font-display font-extrabold text-[16px] text-white leading-none"><span class="count-teachers" data-target="2847">0</span></div>
+              <div class="font-mono text-[8px] text-white/70 mt-0.5 tracking-wide uppercase">Checked in today</div>
+            </div>
+          </div>
+
+          <!-- ── Live notification toast (appears during scan) ── -->
+          <div class="live-toast absolute left-[14%] top-[42%] z-30 flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white border border-dosyellow/40 shadow-2xl opacity-0">
+            <div class="w-7 h-7 rounded-full bg-dosyellow/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-3.5 h-3.5 text-dosblue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+            </div>
+            <div>
+              <div class="text-[11px] font-bold text-ink leading-none">New check-in</div>
+              <div class="font-mono text-[9px] text-slatey mt-1">M. Santos · verified by RFID</div>
+            </div>
+          </div>
+
+          <!-- ── "Tap to try" affordance ── -->
+          <div class="tap-hint absolute left-[24%] top-[30%] z-20 font-mono text-[9px] tracking-[0.14em] text-dosblue uppercase flex items-center gap-1.5 opacity-70">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74"/><path d="M14 10.5V8.5a2.5 2.5 0 0 1 5 0v6.5a7 7 0 0 1-7 7h-1.5a6 6 0 0 1-5.2-3l-2.3-4s.5-1.5 2-1l1 1V8.5a2.5 2.5 0 0 1 5 0"/></svg>
+            Tap to try
+          </div>
+
+          <!-- Data flow: phone → reader → cloud → dashboard -->
+          <svg class="data-flow absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 460 600" fill="none" preserveAspectRatio="none">
+            <path id="flowPath" d="M 70 380 C 110 250 130 160 150 130 C 185 95 220 92 255 96 C 320 108 350 155 380 215" stroke="#F8CB0C" stroke-width="2" stroke-dasharray="4 6" opacity="0.45"/>
+            <circle class="data-packet data-packet--1" r="4" fill="#F8CB0C"></circle>
+            <circle class="data-packet data-packet--2" r="3" fill="#0852A7"></circle>
+            <circle class="data-packet data-packet--3" r="3" fill="#0852A7"></circle>
+          </svg>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Institutional trust strip ── -->
+    <div class="trust-strip absolute bottom-0 inset-x-0 z-10 border-t border-cloud bg-white/70 backdrop-blur-sm">
+      <div class="max-w-[1280px] mx-auto px-5 md:px-10 py-3.5 flex items-center justify-between gap-4 flex-wrap">
+        <div class="flex items-center gap-2.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosblue"></span>
+          <span class="font-mono text-[10px] md:text-[11px] tracking-[0.12em] text-slatey uppercase">
+            An official platform of the Ministerie van Onderwijs, Wetenschap, Cultuur &amp; Sport
+          </span>
+        </div>
+        <div class="hidden md:flex items-center gap-6 font-mono text-[10px] tracking-[0.1em] text-slatey uppercase">
+          <span>Secure by design</span>
+          <span class="w-1 h-1 rounded-full bg-cloud"></span>
+          <span>Built for Curaçao's public schools</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Scroll cue ── -->
+    <div class="scroll-cue absolute bottom-20 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+      <span class="font-mono text-[9px] tracking-[0.25em] text-slatey uppercase">Scroll</span>
+      <div class="w-px h-10 bg-cloud overflow-hidden">
+        <div class="scroll-cue-dot w-px h-3 bg-dosblue"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-2  ·  THE CHALLENGE — Today vs With DOS
+  ════════════════════════════════════════════════ -->
+  <section class="pp2 relative w-full bg-wash overflow-hidden py-24 md:py-32" id="challenge">
+    <img src="assets/images/pp2-today.jpg" alt="" aria-hidden="true" class="pp-photobg">
+
+    <!-- soft brand accent shapes -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.08]" style="width:360px;height:360px;top:-6%;left:-4%;"></div>
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.06]" style="width:420px;height:420px;bottom:-10%;right:-6%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Section header -->
+      <div class="pp2-head text-center max-w-[720px] mx-auto mb-16">
+        <div class="pp2-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosred"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">The Challenge</span>
+        </div>
+        <h2 class="pp2-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          A Better Way to<br>Track Attendance.
+        </h2>
+        <p class="pp2-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          The way schools record attendance today is slow, manual, and error-prone.
+          Here is exactly what the DOS platform replaces — automatically.
+        </p>
+      </div>
+
+      <!-- Split comparison -->
+      <div class="pp2-grid relative grid lg:grid-cols-2 gap-6 lg:gap-0 items-stretch">
+
+        <!-- ─── LEFT: TODAY ─── -->
+        <div class="pp2-today relative rounded-3xl lg:rounded-r-none bg-[#F0EEE9] border border-[#E3DFD6] p-7 md:p-9 overflow-hidden">
+          <!-- paper texture -->
+          <div class="pp2-paper-tex absolute inset-0 opacity-[0.5] pointer-events-none"></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-7">
+              <div>
+                <div class="font-mono text-[10px] tracking-[0.18em] text-[#9b8e74] uppercase mb-1.5">Current Process</div>
+                <div class="font-display font-extrabold text-[26px] text-[#5e5544] leading-none">Today</div>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-[#E3DDD0] flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#9b8e74]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+              </div>
+            </div>
+
+            <!-- ════ MEDIA PLACEHOLDER — replace with real asset ════
+                 ASSET: assets/images/paper-forms.jpg
+                 Muted/desaturated photo: stack of paper sign-in sheets, manual register
+                 Recommended 16:9 · drop file and swap this block for:
+                 <img src="assets/images/paper-forms.jpg" class="absolute inset-0 w-full h-full object-cover">
+            ════════════════════════════════════════════════════════ -->
+            <div class="pp2-visual-today relative h-44 rounded-xl border border-[#CFC6B4] mb-7 overflow-hidden">
+              <img src="assets/images/pp2-today.jpg" alt="Paper attendance sheets and manual sign-in forms on a school office desk" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+              <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(94,85,68,0.35),transparent 55%)"></div>
+            </div>
+
+            <ul class="space-y-3.5">
+              <li class="pp2-old-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-dosred/10 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-dosred" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="text-[15px] font-medium text-[#6b6253]">Paper sign-in sheets, prone to errors</span>
+              </li>
+              <li class="pp2-old-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-dosred/10 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-dosred" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="text-[15px] font-medium text-[#6b6253]">Hours calculated by hand</span>
+              </li>
+              <li class="pp2-old-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-dosred/10 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-dosred" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="text-[15px] font-medium text-[#6b6253]">Payroll delays and inaccuracies</span>
+              </li>
+              <li class="pp2-old-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-dosred/10 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-dosred" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="text-[15px] font-medium text-[#6b6253]">No real-time oversight for directors</span>
+              </li>
+              <li class="pp2-old-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-dosred/10 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-dosred" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </span>
+                <span class="text-[15px] font-medium text-[#6b6253]">Heavy administrative burden</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ─── RIGHT: WITH DOS ─── -->
+        <div class="pp2-future relative rounded-3xl lg:rounded-l-none bg-white border border-cloud shadow-2xl p-7 md:p-9 overflow-hidden lg:-my-4">
+          <!-- top brand bar -->
+          <div class="absolute top-0 inset-x-0 h-1.5 bg-dosblue"></div>
+
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-7">
+              <div>
+                <div class="font-mono text-[10px] tracking-[0.18em] text-dosblue uppercase mb-1.5">The Modern Platform</div>
+                <div class="font-display font-extrabold text-[26px] text-ink leading-none">With DOS</div>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-dosblue flex items-center justify-center shadow-md shadow-dosblue/25">
+                <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></svg>
+              </div>
+            </div>
+
+            <!-- ════ MEDIA PLACEHOLDER — replace with real asset ════
+                 ASSET: assets/renders/platform-preview.mp4  (or .png)
+                 Bright product-in-use shot: teacher tapping phone / live dashboard
+                 Recommended 16:9 · drop file and swap this block for:
+                 <video src="assets/renders/platform-preview.mp4" autoplay muted loop playsinline
+                        class="absolute inset-0 w-full h-full object-cover"></video>
+            ════════════════════════════════════════════════════════ -->
+            <div class="pp2-visual-future dos-videoph h-44 mb-7">
+              <video class="dos-vid" src="assets/videos/withdos.mp4" poster="assets/images/pp4-checkin.jpg" autoplay muted loop playsinline preload="metadata"></video>
+              <span class="dos-vid-scrim"></span>
+            </div>
+
+            <ul class="space-y-3.5">
+              <li class="pp2-new-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-present/12 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <span class="text-[15px] font-semibold text-ink">Tap-to-check-in from any phone</span>
+              </li>
+              <li class="pp2-new-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-present/12 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <span class="text-[15px] font-semibold text-ink">Automatic, accurate hour tracking</span>
+              </li>
+              <li class="pp2-new-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-present/12 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <span class="text-[15px] font-semibold text-ink">Payroll-ready exports, instantly</span>
+              </li>
+              <li class="pp2-new-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-present/12 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <span class="text-[15px] font-semibold text-ink">Real-time director dashboards</span>
+              </li>
+              <li class="pp2-new-item flex items-center gap-3.5">
+                <span class="flex-shrink-0 w-7 h-7 rounded-full bg-present/12 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <span class="text-[15px] font-semibold text-ink">RFID-verified &amp; completely paperless</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Center transformation core -->
+        <div class="pp2-core hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-30 items-center justify-center">
+          <div class="pp2-ring absolute w-14 h-14 rounded-full border-2 border-dosyellow"></div>
+          <div class="pp2-ring pp2-ring--2 absolute w-14 h-14 rounded-full border-2 border-dosyellow"></div>
+          <div class="pp2-arrow relative w-14 h-14 rounded-full bg-dosyellow border-4 border-mist flex items-center justify-center shadow-xl">
+            <svg class="w-6 h-6 text-ink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </div>
+
+        <!-- Floating: Payroll export ready -->
+        <div class="pp2-float pp2-float-payroll absolute right-[3%] top-[-4%] z-30 hidden md:flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-white border border-present/30 shadow-2xl">
+          <div class="w-7 h-7 rounded-lg bg-present/12 flex items-center justify-center">
+            <svg class="w-4 h-4 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="text-[11px] font-bold text-ink leading-none">Payroll Export Ready</div>
+            <div class="font-mono text-[9px] text-slatey mt-1">Payroll · 1-click</div>
+          </div>
+        </div>
+
+        <!-- Floating: hours saved counter -->
+        <div class="pp2-float pp2-float-hours absolute left-[40%] bottom-[-5%] z-30 hidden md:flex items-center gap-3 px-4 py-3 rounded-xl bg-dosyellow shadow-xl">
+          <div>
+            <div class="font-display font-black text-[22px] text-ink leading-none"><span class="pp2-hours" data-target="120">0</span><span class="text-[14px]">h</span></div>
+            <div class="font-mono text-[8px] text-ink/70 mt-1 tracking-wide uppercase">Saved / month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outcome metrics -->
+      <div class="pp2-metrics grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12">
+        <div class="pp2-metric rounded-2xl bg-white border border-cloud p-6 text-center">
+          <div class="font-display font-black text-[40px] text-dosblue leading-none mb-2"><span class="pp2-count" data-target="90">0</span>%</div>
+          <div class="font-body text-[13px] text-slatey">Less administrative time</div>
+        </div>
+        <div class="pp2-metric rounded-2xl bg-white border border-cloud p-6 text-center">
+          <div class="font-display font-black text-[40px] text-dosblue leading-none mb-2">0</div>
+          <div class="font-body text-[13px] text-slatey">Paper forms required</div>
+        </div>
+        <div class="pp2-metric rounded-2xl bg-white border border-cloud p-6 text-center">
+          <div class="font-display font-black text-[40px] text-dosblue leading-none mb-2">Live</div>
+          <div class="font-body text-[13px] text-slatey">Visibility for school leadership</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-3  ·  ONE CONNECTED EDUCATIONAL NETWORK
+  ════════════════════════════════════════════════ -->
+  <section class="pp3 relative w-full bg-paper overflow-hidden py-24 md:py-32" id="network">
+    <img src="assets/images/pp13-vision.jpg" alt="" aria-hidden="true" class="pp-photobg">
+
+    <!-- soft brand accent shapes (parallax) -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:520px;height:520px;top:0%;left:50%;transform:translateX(-50%);"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.07]" style="width:360px;height:360px;bottom:-8%;left:-4%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp3-head text-center max-w-[760px] mx-auto mb-10">
+        <div class="pp3-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">The Ecosystem</span>
+        </div>
+        <h2 class="pp3-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          One Connected<br>Educational Network.
+        </h2>
+        <p class="pp3-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          Every attendance event flows through a secure platform that gives schools, directors,
+          and DOS leadership a shared source of truth across Curaçao's public education system.
+        </p>
+      </div>
+
+      <!-- Editorial photo: the RFID reader — entry point of the network -->
+      <figure class="dos-band">
+        <img src="assets/images/pp3-rfid.jpg" alt="Modern RFID NFC reader mounted at a Curaçao school entrance" loading="lazy">
+        <figcaption class="dos-band-cap"><span class="dos-band-dot"></span><b>RFID / NFC Reader</b><span>Where every check-in begins</span></figcaption>
+      </figure>
+
+      <!-- Core message chain -->
+      <div class="pp3-chain flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-14 text-[13px] md:text-[14px] font-medium">
+        <span class="pp3-chain-item text-ink">One teacher checks in</span>
+        <svg class="pp3-chain-arrow w-3.5 h-3.5 text-dosblue/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="pp3-chain-item text-ink">One school confirms</span>
+        <svg class="pp3-chain-arrow w-3.5 h-3.5 text-dosblue/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="pp3-chain-item text-ink">One director sees it live</span>
+        <svg class="pp3-chain-arrow w-3.5 h-3.5 text-dosblue/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="pp3-chain-item text-ink">One platform updates</span>
+        <svg class="pp3-chain-arrow w-3.5 h-3.5 text-dosblue/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="pp3-chain-item text-dosblue font-semibold">One payroll gets accurate data</span>
+      </div>
+
+      <!-- ════ ECOSYSTEM VISUALIZATION (hero of PP-3) ════
+           MEDIA PLACEHOLDER — this coded ecosystem can later be replaced by a premium render:
+           ASSET: assets/renders/education-network.mp4  (fallback: assets/renders/education-network.jpg)
+           To swap, drop the file in and replace the inner ecosystem markup with:
+           <video src="assets/renders/education-network.mp4" autoplay muted loop playsinline
+                  poster="assets/renders/education-network.jpg"
+                  class="absolute inset-0 w-full h-full object-cover rounded-3xl"></video>
+      ═══════════════════════════════════════════════════════ -->
+      <div class="pp3-eco relative w-full h-[520px] md:h-[600px] rounded-3xl bg-mist/60 border border-cloud overflow-hidden">
+
+        <!-- Connection lines (soft, flowing) + data packets -->
+        <svg class="pp3-lines absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+          <line class="pp3-line" data-node="brievengat" x1="500" y1="300" x2="240" y2="144"/>
+          <line class="pp3-line" data-node="trupial"    x1="500" y1="300" x2="500" y2="96"/>
+          <line class="pp3-line" data-node="alejandro"  x1="500" y1="300" x2="760" y2="144"/>
+          <line class="pp3-line" data-node="directors"  x1="500" y1="300" x2="240" y2="456"/>
+          <line class="pp3-line" data-node="admin"      x1="500" y1="300" x2="500" y2="504"/>
+          <line class="pp3-line" data-node="payroll"    x1="500" y1="300" x2="760" y2="456"/>
+        </svg>
+
+        <!-- Center node (wrapper centers it; inner scales via GSAP) -->
+        <div class="pp3-center-wrap absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <div class="pp3-center relative flex flex-col items-center justify-center w-[148px] h-[148px] md:w-[170px] md:h-[170px] rounded-full bg-dosblue text-white shadow-2xl shadow-dosblue/40">
+            <div class="pp3-center-ring absolute inset-0 rounded-full border-2 border-dosblue/40"></div>
+            <div class="pp3-center-ring pp3-center-ring--2 absolute inset-0 rounded-full border-2 border-dosblue/30"></div>
+            <svg class="w-7 h-7 mb-1.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
+            <div class="font-display font-extrabold text-[12px] md:text-[13px] leading-tight text-center px-3">DOS Workforce<br>Platform</div>
+            <div class="flex items-center gap-1 mt-1.5">
+              <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-dosyellow opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-dosyellow"></span></span>
+              <span class="font-mono text-[7px] tracking-wider text-white/80 uppercase">Live</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SCHOOL nodes (real DOS schools, top) ── -->
+        <div class="pp3-school absolute z-10 -translate-x-1/2 -translate-y-1/2" data-node="brievengat" style="left:24%;top:24%">
+          <div class="pp3-school-inner">
+            <div class="pp3-school-top">
+              <svg class="pp3-school-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+              <span class="pp3-school-dot"></span>
+            </div>
+            <div class="pp3-school-name">Kolegio Brievengat</div>
+            <div class="pp3-school-staff"><span class="pp3-staff" data-base="47">47</span> Staff Active</div>
+          </div>
+        </div>
+        <div class="pp3-school absolute z-10 -translate-x-1/2 -translate-y-1/2" data-node="trupial" style="left:50%;top:16%">
+          <div class="pp3-school-inner">
+            <div class="pp3-school-top">
+              <svg class="pp3-school-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+              <span class="pp3-school-dot"></span>
+            </div>
+            <div class="pp3-school-name">Kolegio Trupial</div>
+            <div class="pp3-school-staff"><span class="pp3-staff" data-base="58">58</span> Staff Active</div>
+          </div>
+        </div>
+        <div class="pp3-school absolute z-10 -translate-x-1/2 -translate-y-1/2" data-node="alejandro" style="left:76%;top:24%">
+          <div class="pp3-school-inner">
+            <div class="pp3-school-top">
+              <svg class="pp3-school-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+              <span class="pp3-school-dot"></span>
+            </div>
+            <div class="pp3-school-name">Kolegio Alejandro Paula</div>
+            <div class="pp3-school-staff"><span class="pp3-staff" data-base="32">32</span> Staff Active</div>
+          </div>
+        </div>
+
+        <!-- ── ROLE nodes (bottom) ── -->
+        <div class="pp3-node absolute z-10 -translate-x-1/2 -translate-y-1/2" data-node="directors" style="left:24%;top:76%">
+          <div class="pp3-node-inner"><svg class="pp3-node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg><span>Directors</span></div>
+        </div>
+        <div class="pp3-node absolute z-10 -translate-x-1/2 -translate-y-1/2" data-node="admin" style="left:50%;top:84%">
+          <div class="pp3-node-inner"><svg class="pp3-node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 21V8l6-5 6 5v13M10 21v-5h4v5"/></svg><span>Administration</span></div>
+        </div>
+        <div class="pp3-node absolute z-10 -translate-x-1/2 -translate-y-1/2" data-node="payroll" style="left:76%;top:76%">
+          <div class="pp3-node-inner"><svg class="pp3-node-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg><span>Payroll</span></div>
+        </div>
+
+        <!-- Floating status cards (live activity layer, corners) -->
+        <div class="pp3-fcard pp3-fcard-1 absolute z-30 top-[5%] left-[0%]">
+          <div class="pp3-fcard-title">Teacher Check-In</div>
+          <div class="pp3-fcard-row"><svg class="w-3.5 h-3.5 text-present" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span class="text-present font-semibold text-[12px]">Verified</span></div>
+          <div class="font-mono text-[9px] text-slatey mt-1">7:45 AM · RFID</div>
+        </div>
+        <div class="pp3-fcard pp3-fcard-2 absolute z-30 top-[5%] right-[0%]">
+          <div class="pp3-fcard-title">DOS Headquarters</div>
+          <div class="pp3-fcard-big"><span class="pp3-hq" data-target="12">0</span> <span>Schools Connected</span></div>
+        </div>
+        <div class="pp3-fcard pp3-fcard-3 absolute z-30 bottom-[7%] left-[0%]">
+          <div class="pp3-fcard-title">Director Dashboard</div>
+          <div class="pp3-fcard-big">98<span>% Attendance</span></div>
+        </div>
+        <div class="pp3-fcard pp3-fcard-4 absolute z-30 bottom-[7%] right-[0%]">
+          <div class="pp3-fcard-title">Payroll Ready</div>
+          <div class="pp3-fcard-row"><svg class="w-3.5 h-3.5 text-dosblue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg><span class="text-ink font-semibold text-[12px]">Export Available</span></div>
+          <div class="font-mono text-[9px] text-slatey mt-1">Payroll export</div>
+        </div>
+
+      </div>
+
+      <!-- Metrics -->
+      <div class="pp3-metrics grid grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
+        <div class="pp3-metric rounded-2xl bg-white border border-cloud p-6 text-center">
+          <div class="font-display font-black text-[40px] text-dosblue leading-none mb-2"><span class="pp3-count" data-target="12">0</span></div>
+          <div class="font-body text-[13px] text-slatey">Schools Connected</div>
+        </div>
+        <div class="pp3-metric rounded-2xl bg-white border border-cloud p-6 text-center">
+          <div class="font-display font-black text-[40px] text-dosblue leading-none mb-2"><span class="pp3-count" data-target="2847">0</span></div>
+          <div class="font-body text-[13px] text-slatey">Teachers Tracked</div>
+        </div>
+        <div class="pp3-metric rounded-2xl bg-white border border-cloud p-6 text-center">
+          <div class="font-display font-black text-[40px] text-dosblue leading-none mb-2"><span class="pp3-count" data-target="100">0</span>%</div>
+          <div class="font-body text-[13px] text-slatey">Real-Time Visibility</div>
+        </div>
+        <div class="pp3-metric rounded-2xl bg-dosblue p-6 text-center">
+          <div class="font-display font-black text-[40px] text-white leading-none mb-2">1</div>
+          <div class="font-body text-[13px] text-white/80">Unified Platform</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-4  ·  HOW IT WORKS
+  ════════════════════════════════════════════════ -->
+  <section class="pp4 relative w-full bg-wash overflow-hidden py-24 md:py-32" id="how-it-works">
+    <img src="assets/images/pp4-checkin.jpg" alt="" aria-hidden="true" class="pp-photobg">
+
+    <!-- soft accents -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:480px;height:480px;top:-6%;right:-4%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.07]" style="width:340px;height:340px;bottom:-8%;left:-4%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp4-head text-center max-w-[720px] mx-auto mb-14">
+        <div class="pp4-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">How It Works</span>
+        </div>
+        <h2 class="pp4-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          Simple For Teachers.<br><span class="text-dosblue">Powerful For Schools.</span>
+        </h2>
+        <p class="pp4-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey mb-7">
+          A secure attendance process that takes only seconds — while automatically updating
+          the entire DOS workforce platform.
+        </p>
+        <!-- DOS tri-color brand bar -->
+        <div class="pp4-brandbar flex items-center justify-center gap-1.5">
+          <span class="w-9 h-1.5 rounded-full bg-dosblue"></span>
+          <span class="w-9 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="w-9 h-1.5 rounded-full bg-dosred"></span>
+        </div>
+      </div>
+
+      <!-- ════ BIG MEDIA AREA — hero of PP-4 ════
+           PRIMARY ASSET:  assets/renders/rfid-reader.png   (hero render / poster)
+           VIDEO ASSET:    assets/videos/tap-demo.mp4        (close-up phone tapping RFID reader)
+           To use the video, drop the file in and replace the placeholder block with:
+           <video src="assets/videos/tap-demo.mp4" autoplay muted loop playsinline
+                  poster="assets/renders/rfid-reader.png"
+                  class="absolute inset-0 w-full h-full object-cover"></video>
+      ═══════════════════════════════════════════════════════ -->
+      <div class="pp4-media relative w-full max-w-[1000px] mx-auto aspect-video rounded-3xl overflow-hidden border border-cloud bg-white shadow-2xl mb-20">
+        <!-- Live demo indicator (DOS red) -->
+        <div class="absolute top-4 left-4 z-30 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/90 border border-cloud backdrop-blur-sm">
+          <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-dosred opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-dosred"></span></span>
+          <span class="font-mono text-[9px] tracking-[0.14em] text-dosred uppercase font-medium">Live Demo</span>
+        </div>
+        <!-- VIDEO PLACEHOLDER (Higgsfield) — video to be dropped in here -->
+        <div class="dos-videoph absolute inset-0">
+          <video class="dos-vid" src="assets/videos/howitworks.mp4" poster="assets/images/pp4-checkin.jpg" autoplay muted loop playsinline preload="metadata"></video>
+          <span class="dos-vid-scrim"></span>
+        </div>
+
+        <!-- progressive confirmation cards overlaid on the hero media -->
+        <div class="pp4-confirm pp4-confirm-1 absolute top-[10%] left-[5%] z-20 opacity-0">
+          <span class="pp4-confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          Identity Verified
+        </div>
+        <div class="pp4-confirm pp4-confirm-2 absolute top-[24%] right-[5%] z-20 opacity-0">
+          <span class="pp4-confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          Attendance Recorded
+        </div>
+        <div class="pp4-confirm pp4-confirm-3 absolute bottom-[24%] left-[6%] z-20 opacity-0">
+          <span class="pp4-confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          Dashboard Updated
+        </div>
+        <div class="pp4-confirm pp4-confirm-4 absolute bottom-[10%] right-[6%] z-20 opacity-0">
+          <span class="pp4-confirm-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          Payroll Ready
+        </div>
+      </div>
+
+      <!-- ════ HORIZONTAL JOURNEY ════ -->
+      <div class="pp4-journey relative mb-20">
+        <!-- track -->
+        <div class="pp4-track absolute left-[6%] right-[6%] top-[34px] md:top-[40px] h-[3px] rounded-full bg-cloud overflow-hidden">
+          <div class="pp4-track-fill absolute inset-y-0 left-0 w-0 bg-dosblue rounded-full"></div>
+        </div>
+        <!-- moving packet -->
+        <div class="pp4-packet absolute top-[30px] md:top-[36px] left-[6%] z-20 w-3 h-3 rounded-full bg-dosyellow shadow-lg shadow-dosyellow/50 opacity-0"></div>
+
+        <!-- stages -->
+        <div class="pp4-stages relative grid grid-cols-2 md:grid-cols-6 gap-y-8 md:gap-0">
+          <div class="pp4-stage flex flex-col items-center text-center" data-i="0">
+            <div class="pp4-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg></div>
+            <div class="pp4-stage-label">Teacher</div>
+            <div class="pp4-stage-sub">Arrives at school</div>
+          </div>
+          <div class="pp4-stage flex flex-col items-center text-center" data-i="1">
+            <div class="pp4-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/></svg></div>
+            <div class="pp4-stage-label">Phone</div>
+            <div class="pp4-stage-sub">Opens DOS app</div>
+          </div>
+          <div class="pp4-stage flex flex-col items-center text-center" data-i="2">
+            <div class="pp4-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div>
+            <div class="pp4-stage-label">RFID Reader</div>
+            <div class="pp4-stage-sub">Tap to check in</div>
+          </div>
+          <div class="pp4-stage flex flex-col items-center text-center" data-i="3">
+            <div class="pp4-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/><path d="M9 13l2 2 4-4"/></svg></div>
+            <div class="pp4-stage-label">Secure Cloud</div>
+            <div class="pp4-stage-sub">Identity verified</div>
+          </div>
+          <div class="pp4-stage flex flex-col items-center text-center" data-i="4">
+            <div class="pp4-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-5"/></svg></div>
+            <div class="pp4-stage-label">Dashboard</div>
+            <div class="pp4-stage-sub">Updates live</div>
+          </div>
+          <div class="pp4-stage flex flex-col items-center text-center" data-i="5">
+            <div class="pp4-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/><path d="M16 17l2 2 3-3"/></svg></div>
+            <div class="pp4-stage-label">Payroll</div>
+            <div class="pp4-stage-sub">Records ready</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ 7 STEPS ════ -->
+      <div class="pp4-steps grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">01</div>
+          <div class="pp4-step-text">Teacher arrives at school.</div>
+        </div>
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">02</div>
+          <div class="pp4-step-text">Teacher opens the DOS mobile app.</div>
+        </div>
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">03</div>
+          <div class="pp4-step-text">Teacher taps their phone on the RFID reader.</div>
+        </div>
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">04</div>
+          <div class="pp4-step-text">Identity is verified securely.</div>
+        </div>
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">05</div>
+          <div class="pp4-step-text">Attendance is recorded instantly.</div>
+        </div>
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">06</div>
+          <div class="pp4-step-text">Director dashboards update automatically.</div>
+        </div>
+        <div class="pp4-step rounded-2xl bg-white border border-cloud p-5">
+          <div class="pp4-step-num">07</div>
+          <div class="pp4-step-text">Payroll-ready records are generated.</div>
+        </div>
+        <div class="pp4-step pp4-step--accent rounded-2xl bg-dosblue p-5 flex flex-col justify-center">
+          <div class="font-display font-black text-[28px] text-white leading-none mb-1"><span class="pp4-count" data-target="8">0</span>s</div>
+          <div class="font-body text-[13px] text-white/80">Average check-in time</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-5  ·  LATE ARRIVAL DETECTION
+  ════════════════════════════════════════════════ -->
+  <section class="pp5 relative w-full overflow-hidden py-24 md:py-32" id="late-detection">
+    <!-- backdrop -->
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-wash to-white"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--red absolute rounded-full" style="width:480px;height:480px;top:-4%;left:-4%;background:rgba(215,32,36,0.06);"></div>
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:440px;height:440px;bottom:-8%;right:-4%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp5-head text-center max-w-[720px] mx-auto mb-14">
+        <div class="pp5-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosred/[0.07] border border-dosred/20 mb-6">
+          <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-dosred opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-dosred"></span></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosred uppercase font-medium">Automatic Detection</span>
+        </div>
+        <h2 class="pp5-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          Late Arrival Detection.
+        </h2>
+        <p class="pp5-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          When a teacher checks in late, the platform flags the arrival, calculates the delay, and
+          notifies administration — instantly, with zero manual work.
+        </p>
+      </div>
+
+      <!-- Editorial photo: teacher checking in -->
+      <figure class="dos-band">
+        <img src="assets/images/pp5-late.jpg" alt="Teacher checking in at an RFID reader in a school corridor" loading="lazy">
+        <figcaption class="dos-band-cap"><span class="dos-band-dot"></span><b>Late Arrival Detection</b><span>Flagged automatically, the moment it happens</span></figcaption>
+      </figure>
+
+      <!-- ════ MISSION CONTROL STAGE (desktop) ════ -->
+      <div class="pp5-mc relative hidden lg:block h-[620px]">
+
+        <!-- data flows: phone → each live event -->
+        <svg class="pp5-mc-flow absolute inset-0 w-full h-full" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+          <path class="pp5-mcline" id="mc1" d="M500 300 C400 230 280 160 170 110" />
+          <path class="pp5-mcline" id="mc2" d="M500 300 C620 220 740 150 840 100" />
+          <path class="pp5-mcline" id="mc3" d="M500 300 C680 300 800 295 890 290" />
+          <path class="pp5-mcline" id="mc4" d="M500 300 C620 400 730 450 830 480" />
+          <path class="pp5-mcline" id="mc5" d="M500 300 C380 400 270 450 160 480" />
+        </svg>
+
+        <!-- CENTER: hero phone -->
+        <div class="pp5-mc-phonewrap absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <div class="pp5-bigphone">
+            <div class="pp5-bigphone-notch"></div>
+            <div class="pp5-bigphone-screen">
+              <div class="pp5-bp-top">
+                <span class="font-mono text-[9px] tracking-[0.16em] text-slatey uppercase">DOS Check-In</span>
+                <span class="pp5-rfid-chip">RFID</span>
+              </div>
+              <div class="pp5-scan"></div>
+              <div class="pp5-bp-clock">8:<span class="pp5-bigclock-min">00</span><span class="pp5-bp-ampm">AM</span></div>
+              <div class="pp5-bp-clocklabel">Actual arrival time</div>
+              <div class="pp5-bp-status">
+                <span class="pp5-status-label">Status</span>
+                <span class="pp5-status-val">Expected</span>
+              </div>
+              <div class="pp5-bp-banner">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                15 minutes late
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE EVENT CARDS -->
+        <div class="pp5-ev pp5-ev-1 absolute z-30" style="left:4%;top:9%">
+          <span class="pp5-ev-num">1</span>
+          <span class="pp5-ev-ic pp5-ev-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div><div class="pp5-ev-t">RFID Verified</div><div class="pp5-ev-s">M. Santos · ID confirmed</div></div>
+        </div>
+
+        <div class="pp5-ev pp5-ev-2 pp5-ev--alert absolute z-30" style="right:4%;top:6%">
+          <span class="pp5-ev-num pp5-ev-num--red">2</span>
+          <span class="pp5-ev-ic pp5-ev-ic--red pp5-ev-pulse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+          <div><div class="pp5-ev-t">Late Arrival Detected<span class="pp5-ev-live">LIVE</span></div><div class="pp5-ev-s">+15 min · automatic</div></div>
+        </div>
+
+        <div class="pp5-ev pp5-ev-3 absolute z-30" style="right:1%;top:41%">
+          <span class="pp5-ev-num">3</span>
+          <span class="pp5-ev-ic pp5-ev-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+          <div><div class="pp5-ev-t">Director Notified</div><div class="pp5-ev-s">Push sent · instant</div></div>
+        </div>
+
+        <div class="pp5-ev pp5-ev-4 absolute z-30" style="right:6%;bottom:10%">
+          <span class="pp5-ev-num">4</span>
+          <span class="pp5-ev-ic pp5-ev-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M21 15a9 9 0 0 1-14.85 3.36L3 16"/></svg></span>
+          <div><div class="pp5-ev-t">Attendance Synced</div><div class="pp5-ev-s">Dashboard · real-time</div></div>
+        </div>
+
+        <div class="pp5-ev pp5-ev-5 absolute z-30" style="left:4%;bottom:10%">
+          <span class="pp5-ev-num">5</span>
+          <span class="pp5-ev-ic pp5-ev-ic--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></span>
+          <div><div class="pp5-ev-t">Payroll Updated</div><div class="pp5-ev-s">Payroll · auto-adjusted</div></div>
+        </div>
+
+        <!-- live activity chip -->
+        <div class="pp5-mc-activity absolute z-30" style="left:50%;bottom:2%;transform:translateX(-50%)">
+          <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-present opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-present"></span></span>
+          <span><span class="pp5-act-count" data-target="1284">0</span> events processed today</span>
+          <span class="pp5-act-sep"></span>
+          <span>Avg detection <strong>0.8s</strong></span>
+        </div>
+      </div>
+
+      <!-- ════ MOBILE scene ════ -->
+      <div class="pp5-mc-mobile lg:hidden">
+        <div class="pp5-bigphone pp5-bigphone--m mx-auto">
+          <div class="pp5-bigphone-notch"></div>
+          <div class="pp5-bigphone-screen">
+            <div class="pp5-bp-top"><span class="font-mono text-[9px] tracking-[0.16em] text-slatey uppercase">DOS Check-In</span><span class="pp5-rfid-chip">RFID</span></div>
+            <div class="pp5-bp-clock">8:<span class="pp5-bigclock-min-m">15</span><span class="pp5-bp-ampm">AM</span></div>
+            <div class="pp5-bp-clocklabel">Actual arrival time</div>
+            <div class="pp5-bp-banner" style="opacity:1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              15 minutes late
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mt-5">
+          <div class="pp5-ev pp5-ev--m"><span class="pp5-ev-ic pp5-ev-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="pp5-ev-t">RFID Verified</div></div>
+          <div class="pp5-ev pp5-ev--m pp5-ev--alert"><span class="pp5-ev-ic pp5-ev-ic--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><div class="pp5-ev-t">Late Detected</div></div>
+          <div class="pp5-ev pp5-ev--m"><span class="pp5-ev-ic pp5-ev-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span><div class="pp5-ev-t">Director Notified</div></div>
+          <div class="pp5-ev pp5-ev--m"><span class="pp5-ev-ic pp5-ev-ic--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><div class="pp5-ev-t">Payroll Updated</div></div>
+        </div>
+      </div>
+
+      <!-- ════ MISSION-CONTROL TIMELINE ════ -->
+      <div class="pp5-tl mt-14">
+        <div class="pp5-tl-track"><div class="pp5-tl-fill"></div></div>
+        <div class="pp5-tl-steps">
+          <div class="pp5-tl-step" data-i="0"><span class="pp5-tl-dot">1</span><div class="pp5-tl-label">RFID check-in<br><strong>8:15 AM</strong></div></div>
+          <div class="pp5-tl-step" data-i="1"><span class="pp5-tl-dot">2</span><div class="pp5-tl-label">Lateness<br><strong>detected</strong></div></div>
+          <div class="pp5-tl-step" data-i="2"><span class="pp5-tl-dot">3</span><div class="pp5-tl-label">Director<br><strong>notified</strong></div></div>
+          <div class="pp5-tl-step" data-i="3"><span class="pp5-tl-dot">4</span><div class="pp5-tl-label">Dashboard<br><strong>synced</strong></div></div>
+          <div class="pp5-tl-step" data-i="4"><span class="pp5-tl-dot">5</span><div class="pp5-tl-label">Payroll<br><strong>adjusted</strong></div></div>
+        </div>
+      </div>
+
+      <!-- stats -->
+      <div class="pp5-stats grid grid-cols-1 sm:grid-cols-3 gap-4 mt-14 max-w-[760px] mx-auto">
+        <div class="pp5-stat"><div class="pp5-stat-num"><span class="pp5-count" data-target="100">0</span>%</div><div class="pp5-stat-label">Accurate tracking</div></div>
+        <div class="pp5-stat"><div class="pp5-stat-num pp5-stat-num--red">Instant</div><div class="pp5-stat-label">Detection</div></div>
+        <div class="pp5-stat"><div class="pp5-stat-num">Zero</div><div class="pp5-stat-label">Manual work</div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-6  ·  MULTIPLE CAMPUS SUPPORT
+  ════════════════════════════════════════════════ -->
+  <section class="pp6 relative w-full overflow-hidden py-24 md:py-32" id="multi-campus">
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-wash to-white"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:480px;height:480px;top:4%;left:-4%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.07]" style="width:420px;height:420px;bottom:-6%;right:-4%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp6-head text-center max-w-[720px] mx-auto mb-12">
+        <div class="pp6-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Multiple Campus Support</span>
+        </div>
+        <h2 class="pp6-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          One Teacher. <span class="text-dosblue">Many Schools.</span>
+        </h2>
+        <p class="pp6-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          The platform automatically detects each campus, keeps separate attendance logs,
+          and unifies everything into one DOS report — no manual switching.
+        </p>
+      </div>
+
+      <!-- Editorial photo: teacher across two campuses -->
+      <figure class="dos-band">
+        <img src="assets/images/pp6-campus.jpg" alt="Teacher walking between two Curaçao school campuses" loading="lazy">
+        <figcaption class="dos-band-cap"><span class="dos-band-dot"></span><b>One Teacher, Many Schools</b><span>Every campus tracked separately</span></figcaption>
+      </figure>
+
+      <!-- Teacher profile card -->
+      <div class="pp6-profile">
+        <div class="pp6-avatar">MS</div>
+        <div class="pp6-profile-id">
+          <div class="pp6-name">Maria Santos</div>
+          <div class="pp6-role">Mathematics Teacher · 2 Schools</div>
+        </div>
+        <div class="pp6-schools">
+          <div class="pp6-school-chip pp6-school-chip--a">
+            <span class="pp6-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span>
+            <div><div class="pp6-chip-name">School A · Willemstad</div><div class="pp6-chip-days">Mon · Wed · Fri</div></div>
+          </div>
+          <div class="pp6-school-chip pp6-school-chip--b">
+            <span class="pp6-chip-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span>
+            <div><div class="pp6-chip-name">School B · Otrobanda</div><div class="pp6-chip-days">Tue · Thu</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ LIVE ECOSYSTEM MAP (desktop) ════ -->
+      <div class="pp6-map relative hidden lg:block h-[560px] mt-10">
+        <!-- day badge (clean pill above the scene) -->
+        <div class="pp6-day absolute" style="left:50%;top:-18px;transform:translateX(-50%)"><span class="pp6-day-label"><span class="pp6-day-dot"></span><span class="pp6-day-text">Monday</span></span></div>
+
+        <svg class="pp6-map-lines absolute inset-0 w-full h-full" viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
+          <path class="pp6-route" id="p6route" d="M140 92 Q500 14 860 92" />
+          <path class="pp6-conn" id="p6a" d="M140 92 Q300 190 500 290" />
+          <path class="pp6-conn" id="p6b" d="M860 92 Q700 190 500 290" />
+          <path class="pp6-conn" id="p6dash" d="M500 290 Q320 400 150 478" />
+          <path class="pp6-conn" id="p6pay" d="M500 290 Q680 400 850 478" />
+        </svg>
+
+        <!-- Campus A -->
+        <div class="pp6-campus pp6-campus--a absolute" style="left:3%;top:5%">
+          <div class="pp6-campus-pulse"></div>
+          <div class="pp6-campus-card">
+            <div class="pp6-campus-top"><span class="pp6-campus-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><span class="pp6-campus-dot"></span></div>
+            <div class="pp6-campus-name">School A</div>
+            <div class="pp6-campus-loc">Willemstad Campus</div>
+            <div class="pp6-campus-foot"><span class="pp6-campus-days">Mon · Wed · Fri</span></div>
+          </div>
+        </div>
+
+        <!-- Campus B -->
+        <div class="pp6-campus pp6-campus--b absolute" style="right:3%;top:5%">
+          <div class="pp6-campus-pulse"></div>
+          <div class="pp6-campus-card">
+            <div class="pp6-campus-top"><span class="pp6-campus-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><span class="pp6-campus-dot"></span></div>
+            <div class="pp6-campus-name">School B</div>
+            <div class="pp6-campus-loc">Otrobanda Campus</div>
+            <div class="pp6-campus-foot"><span class="pp6-campus-days">Tue · Thu</span></div>
+          </div>
+        </div>
+
+        <!-- DOS hub (center) -->
+        <div class="pp6-hub absolute" style="left:50%;top:52%;transform:translate(-50%,-50%)">
+          <div class="pp6-hub-ring"></div>
+          <div class="pp6-hub-ring pp6-hub-ring--2"></div>
+          <div class="pp6-hub-core">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
+            <span class="pp6-hub-label">DOS<br>Platform</span>
+          </div>
+        </div>
+
+        <!-- Director Dashboard node (bottom-left) -->
+        <div class="pp6-node pp6-node--dash absolute" style="left:2%;bottom:3%">
+          <div class="pp6-node-head"><span class="pp6-node-ic pp6-node-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-5"/></svg></span><div><div class="pp6-node-t">Director Dashboard</div><div class="pp6-node-s">Live attendance</div></div><span class="pp6-node-live">Live</span></div>
+          <div class="pp6-node-body">
+            <div class="pp6-dashrow"><span class="pp6-dashrow-name">Maria · records logged</span><span class="pp6-dashrow-val"><span class="pp6-dash-count" data-v="0">0</span><span class="pp6-dash-of">/2</span></span></div>
+            <div class="pp6-dashbar"><div class="pp6-dashbar-fill"></div></div>
+          </div>
+        </div>
+
+        <!-- Payroll node (bottom-right) -->
+        <div class="pp6-node pp6-node--pay absolute" style="right:2%;bottom:3%">
+          <div class="pp6-node-head"><span class="pp6-node-ic pp6-node-ic--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg></span><div><div class="pp6-node-t">Payroll</div><div class="pp6-node-s">Hours synced</div></div></div>
+          <div class="pp6-node-body">
+            <div class="pp6-payrow"><span>School A</span><span class="pp6-payval"><span class="pp6-pay-a" data-v="0">0</span>h</span></div>
+            <div class="pp6-payrow"><span>School B</span><span class="pp6-payval"><span class="pp6-pay-b" data-v="0">0</span>h</span></div>
+            <div class="pp6-payrow pp6-payrow--total"><span>Total</span><span class="pp6-payval"><span class="pp6-pay-total" data-v="0">0</span>h</span></div>
+          </div>
+        </div>
+
+        <!-- Maria marker -->
+        <div class="pp6-marker" style="left:14%;top:22%">
+          <div class="pp6-marker-pin">MS</div>
+          <div class="pp6-marker-label">Maria</div>
+        </div>
+
+        <!-- floating status cards -->
+        <div class="pp6-status pp6-status-1 absolute" style="left:0%;top:40%"><span class="pp6-st-ic pp6-st-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Location Verified</div>
+        <div class="pp6-status pp6-status-2 absolute" style="left:50%;top:28%;transform:translateX(-50%)"><span class="pp6-st-ic pp6-st-ic--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M21 15a9 9 0 0 1-14.85 3.36L3 16"/></svg></span>Campus Detected</div>
+        <div class="pp6-status pp6-status-3 absolute" style="right:0%;top:40%"><span class="pp6-st-ic pp6-st-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></span>Attendance Recorded</div>
+        <div class="pp6-status pp6-status-4 absolute" style="left:16%;bottom:28%"><span class="pp6-st-ic pp6-st-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></span>Dashboard Updated</div>
+        <div class="pp6-status pp6-status-5 absolute" style="right:16%;bottom:28%"><span class="pp6-st-ic pp6-st-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Unified Reporting</div>
+      </div>
+
+      <!-- ════ MOBILE simplified ════ -->
+      <div class="pp6-map-mobile lg:hidden mt-8 space-y-3">
+        <div class="pp6-mrow pp6-mrow--a"><span class="pp6-mrow-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><div><div class="pp6-mrow-t">School A · Willemstad</div><div class="pp6-mrow-s">Mon · Wed · Fri — Location verified, logged</div></div></div>
+        <div class="pp6-mrow pp6-mrow--b"><span class="pp6-mrow-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><div><div class="pp6-mrow-t">School B · Otrobanda</div><div class="pp6-mrow-s">Tue · Thu — Campus auto-detected, logged separately</div></div></div>
+        <div class="pp6-mrow pp6-mrow--hub"><span class="pp6-mrow-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></span><div><div class="pp6-mrow-t">Unified DOS Report</div><div class="pp6-mrow-s">Both campuses combined automatically</div></div></div>
+      </div>
+
+      <!-- ════ premium metrics ════ -->
+      <div class="pp6-metrics grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-14">
+        <div class="pp6-metric">
+          <span class="pp6-metric-ic pp6-metric-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+          <div class="pp6-metric-t">Automatic Campus Detection</div>
+          <div class="pp6-metric-s">The system knows which school, instantly</div>
+        </div>
+        <div class="pp6-metric">
+          <span class="pp6-metric-ic pp6-metric-ic--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>
+          <div class="pp6-metric-t">Separate Attendance Logs</div>
+          <div class="pp6-metric-s">Each campus kept perfectly distinct</div>
+        </div>
+        <div class="pp6-metric">
+          <span class="pp6-metric-ic pp6-metric-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg></span>
+          <div class="pp6-metric-t">Unified DOS Reporting</div>
+          <div class="pp6-metric-s">One report across every school</div>
+        </div>
+        <div class="pp6-metric">
+          <span class="pp6-metric-ic pp6-metric-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M21 15a9 9 0 0 1-14.85 3.36L3 16"/></svg></span>
+          <div class="pp6-metric-t">Real-Time Synchronization</div>
+          <div class="pp6-metric-s">Everything updates the moment it happens</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-7  ·  DIRECTOR DASHBOARD — Command Center
+  ════════════════════════════════════════════════ -->
+  <section class="pp7 relative w-full overflow-hidden py-24 md:py-32" id="command-center">
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-wash to-white"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:520px;height:520px;top:2%;right:-6%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.06]" style="width:380px;height:380px;bottom:-6%;left:-4%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp7-head text-center max-w-[760px] mx-auto mb-12">
+        <div class="pp7-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Command Center</span>
+        </div>
+        <h2 class="pp7-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          Your Entire Network.<br><span class="text-dosblue">One View.</span>
+        </h2>
+        <p class="pp7-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          Every teacher, every school, every attendance event, and every payroll-ready hour
+          across the DOS network — visible from a single command center.
+        </p>
+      </div>
+
+      <!-- Editorial photo: director reviewing attendance data -->
+      <figure class="dos-band">
+        <img src="assets/images/pp7-dashboard.jpg" alt="School director reviewing attendance data on screen" loading="lazy">
+        <figcaption class="dos-band-cap"><span class="dos-band-dot"></span><b>Director Command Center</b><span>Your entire network, one view</span></figcaption>
+      </figure>
+
+      <!-- ════ DOS NETWORK KPI STRIP ════ -->
+      <div class="pp7-kpis grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+        <div class="pp7-kpi">
+          <div class="pp7-kpi-top"><span class="pp7-kpi-ic pp7-kpi-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><span class="pp7-kpi-tag">DOS Network</span></div>
+          <div class="pp7-kpi-val"><span class="pp7-count" data-target="12">0</span></div>
+          <div class="pp7-kpi-lbl">Connected Schools</div>
+          <div class="pp7-kpi-sub"><span class="up">●</span> All online</div>
+        </div>
+        <div class="pp7-kpi">
+          <div class="pp7-kpi-top"><span class="pp7-kpi-ic pp7-kpi-ic--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="pp7-kpi-tag">DOS Network</span></div>
+          <div class="pp7-kpi-val"><span class="pp7-count" data-target="8">0</span></div>
+          <div class="pp7-kpi-lbl">Active Campuses</div>
+          <div class="pp7-kpi-sub">Across <strong>12</strong> schools</div>
+        </div>
+        <div class="pp7-kpi">
+          <div class="pp7-kpi-top"><span class="pp7-kpi-ic pp7-kpi-ic--yellow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span><span class="pp7-kpi-tag">Today</span></div>
+          <div class="pp7-kpi-val"><span class="pp7-count" data-target="347">0</span></div>
+          <div class="pp7-kpi-lbl">Attendance Events</div>
+          <div class="pp7-kpi-sub"><span class="up">↑ 12%</span> vs avg</div>
+        </div>
+        <div class="pp7-kpi">
+          <div class="pp7-kpi-top"><span class="pp7-kpi-ic pp7-kpi-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span><span class="pp7-kpi-tag">Live</span></div>
+          <div class="pp7-kpi-val"><span class="pp7-count" data-target="95">0</span>%</div>
+          <div class="pp7-kpi-lbl">Staff Checked In</div>
+          <div class="pp7-kpi-sub"><strong>1,284</strong> of 1,349</div>
+        </div>
+        <div class="pp7-kpi pp7-kpi--status">
+          <div class="pp7-kpi-top"><span class="pp7-kpi-ic pp7-kpi-ic--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><span class="pp7-kpi-tag">System</span></div>
+          <div class="pp7-kpi-val pp7-kpi-val--ok"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-present opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-present"></span></span>Online</div>
+          <div class="pp7-kpi-lbl">System Status</div>
+          <div class="pp7-kpi-sub"><strong>99.9%</strong> uptime</div>
+        </div>
+      </div>
+
+      <!-- ════ COMMAND CENTER GRID ════ -->
+      <div class="pp7-grid grid lg:grid-cols-[1.7fr_1fr] gap-5">
+
+        <!-- MAIN dashboard -->
+        <div class="pp7-main">
+          <div class="pp7-dash-head">
+            <div>
+              <div class="pp7-dash-title">Director Dashboard</div>
+              <div class="pp7-dash-sub">Monday, June 1, 2026</div>
+            </div>
+            <div class="pp7-dash-tools">
+              <div class="pp7-selector">All DOS Schools <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+              <span class="pp7-live"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-present opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-present"></span></span>Live</span>
+            </div>
+          </div>
+
+          <!-- stat row -->
+          <div class="pp7-stats">
+            <div class="pp7-stat pp7-stat--green"><div class="pp7-stat-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>Present</div><div class="pp7-stat-val"><span class="pp7-count" data-target="1284">0</span></div><div class="pp7-stat-delta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>+34 today</div></div>
+            <div class="pp7-stat pp7-stat--yellow"><div class="pp7-stat-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Late</div><div class="pp7-stat-val"><span class="pp7-count" data-target="47">0</span></div><div class="pp7-stat-delta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 7 6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg>-6 vs avg</div></div>
+            <div class="pp7-stat pp7-stat--red"><div class="pp7-stat-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>Absent</div><div class="pp7-stat-val"><span class="pp7-count" data-target="18">0</span></div><div class="pp7-stat-delta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 7 6 6 4-4 8 8"/><path d="M17 17h4v-4"/></svg>-2 today</div></div>
+            <div class="pp7-stat pp7-stat--blue"><div class="pp7-stat-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Avg Hours</div><div class="pp7-stat-val">7.4<span class="pp7-stat-unit">h</span></div><div class="pp7-stat-delta pp7-stat-delta--muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>+0.2h vs avg</div></div>
+          </div>
+
+          <!-- staff overview -->
+          <div class="pp7-staff">
+            <div class="pp7-staff-head"><span class="pp7-staff-title">Staff Overview</span><span class="pp7-staff-meta">Grouped by school</span></div>
+            <div class="pp7-staff-list">
+
+              <div class="pp7-sgroup">
+                <div class="pp7-sgroup-head"><span class="pp7-sgroup-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><span class="pp7-sgroup-name">Kolegio Brievengat</span><span class="pp7-sgroup-loc">Willemstad</span><span class="pp7-sgroup-badge">1 late</span></div>
+                <div class="pp7-srow"><span class="pp7-savatar pp7-savatar--blue">MS</span><span class="pp7-sname">M. Santos</span><span class="pp7-stime">7:45 AM</span><span class="pp7-shours">7h 30m</span><span class="pp7-spill pp7-spill--present">Present</span></div>
+                <div class="pp7-srow pp7-srow--late"><span class="pp7-savatar pp7-savatar--yellow">AV</span><span class="pp7-sname">A. de Vries</span><span class="pp7-stime">8:15 AM</span><span class="pp7-shours">7h 00m</span><span class="pp7-spill pp7-spill--late">Late</span></div>
+              </div>
+
+              <div class="pp7-sgroup">
+                <div class="pp7-sgroup-head"><span class="pp7-sgroup-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><span class="pp7-sgroup-name">Kolegio Trupial</span><span class="pp7-sgroup-loc">Punda</span><span class="pp7-sgroup-badge pp7-sgroup-badge--red">1 absent</span></div>
+                <div class="pp7-srow"><span class="pp7-savatar pp7-savatar--blue">JR</span><span class="pp7-sname">J. Rodríguez</span><span class="pp7-stime">7:42 AM</span><span class="pp7-shours">7h 35m</span><span class="pp7-spill pp7-spill--present">Present</span></div>
+                <div class="pp7-srow pp7-srow--absent"><span class="pp7-savatar pp7-savatar--red">LK</span><span class="pp7-sname">L. Koelman</span><span class="pp7-stime">—</span><span class="pp7-shours">—</span><span class="pp7-spill pp7-spill--absent">Absent</span></div>
+              </div>
+
+              <div class="pp7-sgroup">
+                <div class="pp7-sgroup-head"><span class="pp7-sgroup-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span><span class="pp7-sgroup-name">Kolegio Alejandro Paula</span><span class="pp7-sgroup-loc">Otrobanda</span><span class="pp7-sgroup-badge pp7-sgroup-badge--green">All present</span></div>
+                <div class="pp7-srow"><span class="pp7-savatar pp7-savatar--blue">CM</span><span class="pp7-sname">C. Martina</span><span class="pp7-stime">7:55 AM</span><span class="pp7-shours">7h 20m</span><span class="pp7-spill pp7-spill--present">Present</span></div>
+                <div class="pp7-srow pp7-srow--new"><span class="pp7-savatar pp7-savatar--blue">DG</span><span class="pp7-sname">D. Girigori</span><span class="pp7-stime">8:02 AM</span><span class="pp7-shours">7h 18m</span><span class="pp7-spill pp7-spill--present">Present</span></div>
+              </div>
+
+            </div>
+            <div class="pp7-staff-foot">
+              <span class="pp7-staff-count">Showing 6 of <strong>1,349</strong> staff across 12 schools</span>
+              <span class="pp7-staff-link">View full network <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR -->
+        <div class="pp7-side">
+
+          <!-- Director Insights -->
+          <div class="pp7-card pp7-insights">
+            <div class="pp7-card-head"><span class="pp7-card-title">Director Insights</span></div>
+            <div class="pp7-rate">
+              <div>
+                <div class="pp7-rate-val"><span class="pp7-count" data-target="95">0</span><span class="pp7-rate-pct">%</span></div>
+                <div class="pp7-rate-lbl">Attendance Rate</div>
+              </div>
+              <div class="pp7-trend pp7-trend--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>+2.1%</div>
+            </div>
+            <div class="pp7-trendchart">
+              <div class="pp7-tc-label">Weekly Attendance Trend</div>
+              <div class="pp7-tc-bars">
+                <div class="pp7-tc-bar" style="--h:62%"></div>
+                <div class="pp7-tc-bar" style="--h:74%"></div>
+                <div class="pp7-tc-bar" style="--h:68%"></div>
+                <div class="pp7-tc-bar" style="--h:85%"></div>
+                <div class="pp7-tc-bar" style="--h:78%"></div>
+                <div class="pp7-tc-bar pp7-tc-bar--hi" style="--h:95%"></div>
+                <div class="pp7-tc-bar" style="--h:90%"></div>
+              </div>
+              <div class="pp7-tc-days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+            </div>
+            <div class="pp7-mini-grid">
+              <div class="pp7-mini"><div class="pp7-mini-val"><span class="pp7-count" data-target="12">0</span></div><div class="pp7-mini-lbl">Schools Online</div></div>
+              <div class="pp7-mini"><div class="pp7-mini-val"><span class="pp7-count" data-target="1349">0</span></div><div class="pp7-mini-lbl">Active Staff Today</div></div>
+              <div class="pp7-mini"><div class="pp7-mini-val pp7-mini-val--green">Synced</div><div class="pp7-mini-lbl">Payroll Status</div></div>
+              <div class="pp7-mini"><div class="pp7-mini-val"><span class="pp7-count" data-target="347">0</span></div><div class="pp7-mini-lbl">Events Today</div></div>
+            </div>
+          </div>
+
+          <!-- Live Activity Feed -->
+          <div class="pp7-card pp7-feed">
+            <div class="pp7-card-head"><span class="pp7-card-title">Live Activity</span><span class="pp7-feed-live"><span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-present opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-present"></span></span>Live</span></div>
+            <div class="pp7-feed-list">
+              <!-- items injected/animated by JS -->
+            </div>
+          </div>
+
+          <!-- Payroll Sync — bridge to PP-8 -->
+          <div class="pp7-card pp7-soho">
+            <div class="pp7-soho-head">
+              <span class="pp7-soho-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg></span>
+              <div><div class="pp7-soho-title">Payroll Sync</div><div class="pp7-soho-sub">Payroll-ready records</div></div>
+              <span class="pp7-soho-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Export Ready</span>
+            </div>
+            <div class="pp7-soho-body">
+              <div class="pp7-soho-hours"><span class="pp7-count" data-target="1240">0</span><span class="pp7-soho-hunit">hours tracked</span></div>
+              <div class="pp7-soho-sync"><span class="pp7-sync-spin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M21 15a9 9 0 0 1-14.85 3.36L3 16"/></svg></span>Last sync: 2 minutes ago</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-8  ·  PAYROLL PREPARATION (Automation)
+  ════════════════════════════════════════════════ -->
+  <section class="pp8 relative w-full overflow-hidden py-24 md:py-32" id="payroll">
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-wash to-white"></div>
+    <img src="assets/images/pp8-payroll.jpg" alt="" aria-hidden="true" class="pp-photobg">
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:500px;height:500px;top:0%;left:-5%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.06]" style="width:380px;height:380px;bottom:-6%;right:-4%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp8-head text-center max-w-[740px] mx-auto mb-14">
+        <div class="pp8-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Payroll Preparation</span>
+        </div>
+        <h2 class="pp8-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.6vw,56px)] mb-5">
+          Attendance In.<br><span class="text-dosblue">Payroll Out.</span>
+        </h2>
+        <p class="pp8-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          Every check-in this platform records automatically becomes a verified, payroll-ready
+          record — no spreadsheets, no manual calculation, no chasing hours.
+        </p>
+      </div>
+
+      <!-- Editorial photo: payroll administrator -->
+      <figure class="dos-band">
+        <img src="assets/images/pp8-payroll.jpg" alt="Payroll administrator reviewing automated reports" loading="lazy">
+        <figcaption class="dos-band-cap"><span class="dos-band-dot"></span><b>Payroll, Automated</b><span>From attendance to SOHO export</span></figcaption>
+      </figure>
+
+      <!-- ════ AUTOMATION PIPELINE (hero) ════ -->
+      <div class="pp8-step-cap">
+        <span class="pp8-step-n">01</span>
+        <div><div class="pp8-step-t">How it works</div><div class="pp8-step-d">Every attendance tap moves automatically through five steps — from a teacher checking in to a finished payroll file. No one touches a spreadsheet.</div></div>
+      </div>
+      <div class="pp8-pipe mb-16">
+        <div class="pp8-pipe-track"><div class="pp8-pipe-fill"></div></div>
+        <div class="pp8-pipe-packet"></div>
+        <div class="pp8-stages">
+          <div class="pp8-stage" data-i="0">
+            <div class="pp8-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="pp8-stage-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="pp8-stage-label">Teacher Checks In</div>
+            <div class="pp8-stage-sub">Time captured</div>
+          </div>
+          <div class="pp8-stage" data-i="1">
+            <div class="pp8-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg><span class="pp8-stage-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="pp8-stage-label">DOS Platform</div>
+            <div class="pp8-stage-sub">Synced to cloud</div>
+          </div>
+          <div class="pp8-stage" data-i="2">
+            <div class="pp8-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="pp8-stage-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="pp8-stage-label">Hours Calculated</div>
+            <div class="pp8-stage-sub">Computed instantly</div>
+          </div>
+          <div class="pp8-stage" data-i="3">
+            <div class="pp8-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg><span class="pp8-stage-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="pp8-stage-label">SOHO Export</div>
+            <div class="pp8-stage-sub">Formatted for payroll</div>
+          </div>
+          <div class="pp8-stage pp8-stage--final" data-i="4">
+            <div class="pp8-stage-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg><span class="pp8-stage-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+            <div class="pp8-stage-label">Payroll Ready</div>
+            <div class="pp8-stage-sub">Zero manual work</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ AUTOMATION METRICS ════ -->
+      <div class="pp8-metrics grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
+        <div class="pp8-metric"><div class="pp8-metric-val"><span class="pp8-count" data-target="18420">0</span></div><div class="pp8-metric-lbl">Hours Calculated Automatically</div></div>
+        <div class="pp8-metric"><div class="pp8-metric-val"><span class="pp8-count" data-target="11240">0</span></div><div class="pp8-metric-lbl">Attendance Records Processed</div></div>
+        <div class="pp8-metric"><div class="pp8-metric-val"><span class="pp8-count" data-target="48">0</span></div><div class="pp8-metric-lbl">Payroll Exports Generated</div></div>
+        <div class="pp8-metric pp8-metric--accent"><div class="pp8-metric-val"><span class="pp8-count" data-target="92">0</span>%</div><div class="pp8-metric-lbl">Administrative Time Saved</div></div>
+        <div class="pp8-metric pp8-metric--accent"><div class="pp8-metric-val"><span class="pp8-count" data-target="99">0</span>.8%</div><div class="pp8-metric-lbl">Error Reduction</div></div>
+      </div>
+
+      <!-- ════ BEFORE vs AFTER ════ -->
+      <div class="pp8-step-cap">
+        <span class="pp8-step-n">02</span>
+        <div><div class="pp8-step-t">The difference</div><div class="pp8-step-d">The same payroll, done two ways. Today it's days of manual work across every school. With DOS, the work is already done.</div></div>
+      </div>
+      <div class="pp8-ba grid lg:grid-cols-2 gap-5 mb-16">
+        <div class="pp8-ba-card pp8-ba-card--manual">
+          <div class="pp8-ba-head"><span class="pp8-ba-tag pp8-ba-tag--red">Manual Process</span><span class="pp8-ba-time">The way it works today</span></div>
+          <ul class="pp8-ba-list">
+            <li><span class="pp8-ba-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="pp8-ba-txt"><strong>Collect attendance</strong><em>Gather paper forms &amp; logs from each school</em></span></li>
+            <li><span class="pp8-ba-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="pp8-ba-txt"><strong>Verify hours by hand</strong><em>Check signatures &amp; times one by one</em></span></li>
+            <li><span class="pp8-ba-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="pp8-ba-txt"><strong>Calculate totals manually</strong><em>By calculator or spreadsheet</em></span></li>
+            <li><span class="pp8-ba-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="pp8-ba-txt"><strong>Re-enter into payroll</strong><em>Re-type every record into the system</em></span></li>
+            <li><span class="pp8-ba-x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></span><span class="pp8-ba-txt"><strong>Review &amp; fix errors</strong><em>Catch mistakes late, often after payday</em></span></li>
+          </ul>
+          <div class="pp8-ba-timebox pp8-ba-timebox--red"><span class="pp8-tb-lbl">Time required</span><span class="pp8-tb-val">8–12 hours</span><span class="pp8-tb-unit">per pay period</span></div>
+        </div>
+        <div class="pp8-ba-card pp8-ba-card--auto">
+          <div class="pp8-ba-bar"></div>
+          <div class="pp8-ba-head"><span class="pp8-ba-tag pp8-ba-tag--blue">With DOS</span><span class="pp8-ba-time pp8-ba-time--green">Automatic &amp; verified</span></div>
+          <ul class="pp8-ba-list">
+            <li><span class="pp8-ba-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="pp8-ba-txt"><strong>Automatic tracking</strong><em>Every check-in &amp; check-out recorded</em></span></li>
+            <li><span class="pp8-ba-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="pp8-ba-txt"><strong>Real-time calculation</strong><em>Hours computed the moment they happen</em></span></li>
+            <li><span class="pp8-ba-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="pp8-ba-txt"><strong>Automatic verification</strong><em>Late arrivals flagged, totals confirmed</em></span></li>
+            <li><span class="pp8-ba-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="pp8-ba-txt"><strong>One-click SOHO export</strong><em>Payroll-ready Excel / CSV file</em></span></li>
+            <li><span class="pp8-ba-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="pp8-ba-txt"><strong>Zero manual work</strong><em>Nothing to re-type, nothing to chase</em></span></li>
+          </ul>
+          <div class="pp8-ba-timebox pp8-ba-timebox--green"><span class="pp8-tb-lbl">Time required</span><span class="pp8-tb-val">5 minutes</span><span class="pp8-tb-unit">per pay period</span></div>
+        </div>
+      </div>
+
+      <!-- ════ REPORT + SOHO ════ -->
+      <div class="pp8-step-cap">
+        <span class="pp8-step-n">03</span>
+        <div><div class="pp8-step-t">The result</div><div class="pp8-step-d">A finished payroll report — days worked, hours, and late arrivals already totalled and verified. One click sends it straight to SOHO.</div></div>
+      </div>
+      <div class="pp8-out grid lg:grid-cols-[1.55fr_1fr] gap-5">
+
+        <!-- payroll report preview -->
+        <div class="pp8-report">
+          <div class="pp8-report-head">
+            <div><div class="pp8-report-title">Payroll Export Report</div><div class="pp8-report-sub">June 2026 · all schools · auto-generated</div></div>
+            <span class="pp8-report-status"><span class="pp8-rs-dot"></span>Verified</span>
+          </div>
+          <div class="pp8-report-cols"><span>Employee</span><span>Days</span><span>Hours</span><span>Late</span><span>Status</span></div>
+          <div class="pp8-report-rows">
+            <div class="pp8-rrow"><span class="pp8-rname"><span class="pp8-ravatar">MS</span>Maria Santos</span><span class="pp8-rdays">20</span><span class="pp8-rhours">160.0</span><span class="pp8-rlate">0</span><span class="pp8-rstatus pp8-rstatus--ok">Complete</span></div>
+            <div class="pp8-rrow"><span class="pp8-rname"><span class="pp8-ravatar">JR</span>Juan Rodríguez</span><span class="pp8-rdays">20</span><span class="pp8-rhours">158.5</span><span class="pp8-rlate">1</span><span class="pp8-rstatus pp8-rstatus--ok">Complete</span></div>
+            <div class="pp8-rrow"><span class="pp8-rname"><span class="pp8-ravatar">AV</span>Anna de Vries</span><span class="pp8-rdays">18</span><span class="pp8-rhours">144.0</span><span class="pp8-rlate pp8-rlate--hi">2</span><span class="pp8-rstatus pp8-rstatus--ok">Complete</span></div>
+            <div class="pp8-rrow"><span class="pp8-rname"><span class="pp8-ravatar">CM</span>Carlos Martina</span><span class="pp8-rdays">19</span><span class="pp8-rhours">152.0</span><span class="pp8-rlate">0</span><span class="pp8-rstatus pp8-rstatus--ok">Complete</span></div>
+          </div>
+          <div class="pp8-report-foot">
+            <span class="pp8-report-total">Total: <strong>614.5h</strong> · 4 of 1,349 staff shown</span>
+            <button class="pp8-export-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></svg>Export to SOHO</button>
+          </div>
+        </div>
+
+        <!-- SOHO integration card -->
+        <div class="pp8-soho">
+          <div class="pp8-soho-top">
+            <span class="pp8-soho-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h10M7 13h6"/></svg></span>
+            <div><div class="pp8-soho-name">SOHO Payroll</div><div class="pp8-soho-tag">Integration</div></div>
+          </div>
+          <div class="pp8-soho-checks">
+            <div class="pp8-soho-check"><span class="pp8-sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Connected</div>
+            <div class="pp8-soho-check"><span class="pp8-sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Hours Verified</div>
+            <div class="pp8-soho-check"><span class="pp8-sc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Export Ready</div>
+          </div>
+          <div class="pp8-soho-sync"><span class="pp8-sync-spin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M21 15a9 9 0 0 1-14.85 3.36L3 16"/></svg></span>Last sync: Today, 08:45 AM</div>
+        </div>
+
+      </div>
+
+      <!-- ════ TRANSITION TO PP-9 ════ -->
+      <div class="pp8-transition">
+        <span class="pp8-trans-dot"></span>
+        Attendance today. <strong>Workforce management tomorrow.</strong>
+      </div>
+
+    </div>
+  </section>
+
+    <!-- ════════════════════════════════════════════════
+       PP-9  ·  SCHOOL ECOSYSTEM EXPANSION (Strategic Vision)
+  ════════════════════════════════════════════════ -->
+  <section class="pp9 relative w-full overflow-hidden py-24 md:py-32" id="ecosystem">
+    <div class="absolute inset-0 pp9-bg"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.06]" style="width:560px;height:560px;top:-6%;left:-6%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.06]" style="width:440px;height:440px;bottom:-10%;right:-6%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp9-head text-center max-w-[780px] mx-auto mb-14">
+        <div class="pp9-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Strategic Vision</span>
+        </div>
+        <h2 class="pp9-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.8vw,58px)] mb-5">
+          School Ecosystem Expansion.
+        </h2>
+        <p class="pp9-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          Attendance is where it starts — not where it ends. Here's what the platform grows into.
+        </p>
+      </div>
+
+      <!-- ════ TODAY: the platform that exists now ════ -->
+      <div class="pp9-phase"><span class="pp9-phase-dot pp9-phase-dot--now"></span>Today</div>
+      <div class="pp9-today">
+        <div class="pp9-today-glow"></div>
+        <div class="relative z-10">
+          <div class="pp9-today-head">
+            <span class="pp9-today-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <div class="pp9-today-id">
+              <div class="pp9-today-title">DOS Attendance Platform</div>
+              <div class="pp9-today-sub">Live in schools across Curaçao today</div>
+            </div>
+            <span class="pp9-today-badge"><span class="pp9-tb-dot"></span>Active</span>
+          </div>
+          <div class="pp9-today-caps">
+            <div class="pp9-cap">
+              <span class="pp9-cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 12 0v1"/></svg></span>
+              <span class="pp9-cap-t">Teacher Check-In</span>
+            </div>
+            <div class="pp9-cap">
+              <span class="pp9-cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9a14 14 0 0 1 14 0"/><path d="M8 12a9 9 0 0 1 8 0"/><circle cx="12" cy="16" r="1" fill="currentColor"/></svg></span>
+              <span class="pp9-cap-t">RFID Verification</span>
+            </div>
+            <div class="pp9-cap">
+              <span class="pp9-cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <span class="pp9-cap-t">Attendance Tracking</span>
+            </div>
+            <div class="pp9-cap">
+              <span class="pp9-cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 13h4M7 16h7"/></svg></span>
+              <span class="pp9-cap-t">Director Dashboard</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Connection line (grows downward) -->
+      <div class="pp9-connector">
+        <div class="pp9-connector-line"></div>
+        <span class="pp9-connector-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+      </div>
+
+      <!-- ════ TOMORROW: expansion grid ════ -->
+      <div class="pp9-phase pp9-phase--next"><span class="pp9-phase-dot pp9-phase-dot--next"></span>Tomorrow</div>
+      <div class="pp9-xgrid grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-16">
+
+        <div class="pp9-xcard">
+          <span class="pp9-xcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v.01M18 14v.01"/></svg></span>
+          <div class="pp9-xcard-title">Payroll Integration</div>
+          <div class="pp9-xcard-desc">Verified hours flow straight into SOHO. Payroll runs itself.</div>
+        </div>
+
+        <div class="pp9-xcard">
+          <span class="pp9-xcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+          <div class="pp9-xcard-title">HR Management</div>
+          <div class="pp9-xcard-desc">Staff records, schedules and leave — the whole team in one place.</div>
+        </div>
+
+        <div class="pp9-xcard">
+          <span class="pp9-xcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-3 3 3 4-5"/></svg></span>
+          <div class="pp9-xcard-title">School Analytics</div>
+          <div class="pp9-xcard-desc">Turn attendance data into trends, patterns and clear decisions.</div>
+        </div>
+
+        <div class="pp9-xcard">
+          <span class="pp9-xcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l5-4 5 4v13M19 21V12l-4-3M9 12h2M9 16h2"/></svg></span>
+          <div class="pp9-xcard-title">Multi-School Management</div>
+          <div class="pp9-xcard-desc">Every school and campus, managed from a single platform.</div>
+        </div>
+
+        <div class="pp9-xcard">
+          <span class="pp9-xcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg></span>
+          <div class="pp9-xcard-title">Leadership Reporting</div>
+          <div class="pp9-xcard-desc">One clear, real-time picture for school and network leadership.</div>
+        </div>
+
+        <div class="pp9-xcard">
+          <span class="pp9-xcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M12 3v9l6.5-6.5"/></svg></span>
+          <div class="pp9-xcard-title">Operational Oversight</div>
+          <div class="pp9-xcard-desc">See it all as it happens — schools, staff and attendance, live.</div>
+        </div>
+
+      </div>
+
+      <!-- ════ BOTTOM: platform banner ════ -->
+      <div class="pp9-banner">
+        <div class="pp9-banner-glow"></div>
+        <div class="pp9-banner-gridtex"></div>
+        <div class="relative z-10 text-center">
+          <div class="pp9-banner-eyebrow"><span class="pp9-be-dot"></span>The Bigger Picture</div>
+          <h3 class="pp9-banner-title">DOS Workforce Operations Platform</h3>
+          <p class="pp9-banner-sub">One platform, built on attendance data — and growing into the system that runs payroll, people, analytics and day-to-day operations across every DOS school. Attendance is only the beginning.</p>
+        </div>
+      </div>
+
+      <!-- Final message -->
+      <div class="pp9-final">
+        <span class="pp9-final-dot"></span>
+        DOS isn't building an attendance app. <strong>DOS is building the platform that will run workforce operations for every school in Curaçao.</strong>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════
+       PP-10  ·  REAL-TIME DATA FLOW (Live System Architecture)
+  ════════════════════════════════════════════════ -->
+  <section class="pp10 relative w-full overflow-hidden py-24 md:py-32" id="data-flow">
+    <div class="absolute inset-0 pp10-bg"></div>
+    <img src="assets/images/pp13-vision.jpg" alt="" aria-hidden="true" class="pp-photobg">
+    <div class="pp10-grid absolute inset-0 pointer-events-none"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.06]" style="width:560px;height:560px;top:-8%;right:-6%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.05]" style="width:420px;height:420px;bottom:-10%;left:-6%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp10-head text-center max-w-[760px] mx-auto mb-12">
+        <div class="pp10-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="pp10-eb-dot"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">System Architecture · Live</span>
+        </div>
+        <h2 class="pp10-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.8vw,58px)] mb-5">
+          Real-Time Data Flow.
+        </h2>
+        <p class="pp10-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          Watch one attendance tap travel securely through every layer of the platform — from a teacher's phone to payroll — in real time.
+        </p>
+      </div>
+
+      <!-- Live telemetry — floating sync indicators / status badges -->
+      <div class="pp10-telemetry">
+        <div class="pp10-tele"><span class="pp10-tele-dot"></span><div><div class="pp10-tele-val"><span class="pp10-count" data-target="1284">0</span></div><div class="pp10-tele-lbl">Events / min</div></div></div>
+        <div class="pp10-tele"><span class="pp10-tele-dot"></span><div><div class="pp10-tele-val">0.3<span class="pp10-tele-unit">s</span></div><div class="pp10-tele-lbl">Avg latency</div></div></div>
+        <div class="pp10-tele"><span class="pp10-tele-dot"></span><div><div class="pp10-tele-val">AES-256</div><div class="pp10-tele-lbl">Encryption</div></div></div>
+        <div class="pp10-tele"><span class="pp10-tele-dot"></span><div><div class="pp10-tele-val">99.9<span class="pp10-tele-unit">%</span></div><div class="pp10-tele-lbl">Uptime</div></div></div>
+      </div>
+
+      <!-- ════ LARGE CENTRAL VIDEO (Higgsfield) ════ -->
+      <div class="pp10-video">
+        <div class="pp10-video-inner">
+          <video class="dos-vid" src="assets/videos/architecture.mp4" autoplay muted loop playsinline preload="metadata"></video>
+          <span class="dos-vid-scrim"></span>
+          <div class="pp10-video-glow"></div>
+          <svg class="pp10-video-lines" viewBox="0 0 1200 600" preserveAspectRatio="none" aria-hidden="true">
+            <path class="pp10-vl" d="M-50 180 H1250"/>
+            <path class="pp10-vl pp10-vl--2" d="M-50 300 H1250"/>
+            <path class="pp10-vl pp10-vl--3" d="M-50 420 H1250"/>
+          </svg>
+          <div class="pp10-video-top">
+            <span class="pp10-video-badge"><span class="pp10-vb-dot"></span>Real-Time Attendance Data Flow</span>
+            <span class="pp10-video-live">LIVE</span>
+          </div>
+          <div class="pp10-video-bottom">
+            <div class="pp10-video-cap"><b style="color:#fff;font-weight:800">End-to-End Flow</b>&nbsp;&nbsp;·&nbsp;&nbsp;Teacher Phone → RFID Reader → Verification Engine → Cloud Platform → Director Dashboard → DOS HQ → Payroll Export</div>
+            <span class="pp10-video-dur">16:9</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ 6-LAYER REAL-TIME PIPELINE (vertical) ════ -->
+      <div class="pp10-flow">
+        <div class="pp10-spine"><div class="pp10-spine-fill"></div></div>
+        <div class="pp10-spine-pulse"></div>
+        <div class="pp10-lanes">
+
+          <div class="pp10-lane" data-i="0">
+            <div class="pp10-lane-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></div>
+            <div class="pp10-lane-main">
+              <div class="pp10-lane-top"><span class="pp10-lane-step">01</span><span class="pp10-lane-name">Teacher Phone</span><span class="pp10-lane-badge"><span class="pp10-lb-dot"></span>Live</span></div>
+              <div class="pp10-lane-sub">Tap to check in — identity attached to the request</div>
+              <div class="pp10-lane-bar"><div class="pp10-lane-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="pp10-lane" data-i="1">
+            <div class="pp10-lane-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <div class="pp10-lane-main">
+              <div class="pp10-lane-top"><span class="pp10-lane-step">02</span><span class="pp10-lane-name">RFID Verification</span><span class="pp10-lane-badge"><span class="pp10-lb-dot"></span>Verified</span></div>
+              <div class="pp10-lane-sub">Secure NFC tag confirms who is checking in, and where</div>
+              <div class="pp10-lane-bar"><div class="pp10-lane-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="pp10-lane" data-i="2">
+            <div class="pp10-lane-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19a4.5 4.5 0 0 0 .5-8.97A6 6 0 0 0 6.5 9 4.5 4.5 0 0 0 7 19z"/><rect x="9.5" y="12" width="5" height="4" rx="1"/><path d="M10.5 12v-1a1.5 1.5 0 0 1 3 0v1"/></svg></div>
+            <div class="pp10-lane-main">
+              <div class="pp10-lane-top"><span class="pp10-lane-step">03</span><span class="pp10-lane-name">Secure Cloud Platform</span><span class="pp10-lane-badge"><span class="pp10-lb-dot"></span>Encrypted</span></div>
+              <div class="pp10-lane-sub">Encrypted, processed and stored — the platform's single source of truth</div>
+              <div class="pp10-lane-bar"><div class="pp10-lane-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="pp10-lane" data-i="3">
+            <div class="pp10-lane-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 13h4M7 16h7"/></svg></div>
+            <div class="pp10-lane-main">
+              <div class="pp10-lane-top"><span class="pp10-lane-step">04</span><span class="pp10-lane-name">Director Dashboard</span><span class="pp10-lane-badge"><span class="pp10-lb-dot"></span>Live</span></div>
+              <div class="pp10-lane-sub">The school director sees the check-in update the instant it lands</div>
+              <div class="pp10-lane-bar"><div class="pp10-lane-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="pp10-lane" data-i="4">
+            <div class="pp10-lane-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l5-4 5 4v13M19 21V11l-4-3M9 12h2M9 16h2"/></svg></div>
+            <div class="pp10-lane-main">
+              <div class="pp10-lane-top"><span class="pp10-lane-step">05</span><span class="pp10-lane-name">DOS Headquarters</span><span class="pp10-lane-badge"><span class="pp10-lb-dot"></span>Synced</span></div>
+              <div class="pp10-lane-sub">Rolls up into network-wide oversight across every DOS school</div>
+              <div class="pp10-lane-bar"><div class="pp10-lane-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="pp10-lane pp10-lane--final" data-i="5">
+            <div class="pp10-lane-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></div>
+            <div class="pp10-lane-main">
+              <div class="pp10-lane-top"><span class="pp10-lane-step">06</span><span class="pp10-lane-name">Payroll Export</span><span class="pp10-lane-badge pp10-lane-badge--done"><span class="pp10-lb-dot"></span>Ready</span></div>
+              <div class="pp10-lane-sub">Verified hours arrive payroll-ready, formatted for export</div>
+              <div class="pp10-lane-bar"><div class="pp10-lane-bar-fill"></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- transition -->
+      <div class="pp10-transition"><span class="pp10-trans-dot"></span>Encrypted end-to-end. <strong>Synced in real time.</strong></div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-11  ·  THE DOS PLATFORM IN ACTION (Product Experience)
+  ════════════════════════════════════════════════ -->
+  <section class="pp11 relative w-full overflow-hidden py-24 md:py-32" id="experience">
+    <div class="absolute inset-0 pp11-bg"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.05]" style="width:540px;height:540px;top:-6%;left:-6%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.06]" style="width:420px;height:420px;bottom:-10%;right:-6%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp11-head text-center max-w-[760px] mx-auto mb-14">
+        <div class="pp11-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Product Experience</span>
+        </div>
+        <h2 class="pp11-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.8vw,58px)] mb-5">
+          The DOS Platform In Action.
+        </h2>
+        <p class="pp11-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          Designed for teachers, administrators and school leadership.
+        </p>
+      </div>
+
+      <!-- Two experience columns -->
+      <div class="pp11-grid grid lg:grid-cols-2 lg:items-stretch gap-5 md:gap-6 mb-14">
+
+        <!-- ─── LEFT: Teacher Experience ─── -->
+        <div class="pp11-card pp11-card--teacher">
+          <div class="pp11-card-head">
+            <span class="pp11-card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span>
+            <div class="pp11-card-titles">
+              <div class="pp11-card-title">Teacher Experience</div>
+              <div class="pp11-card-tag">Mobile check-in</div>
+            </div>
+            <img src="assets/images/pp4-checkin.jpg" alt="Teacher checking in" class="pp11-card-thumb" loading="lazy">
+          </div>
+
+                    <!-- real DOS app screenshot in device frame -->
+          <div class="pp11-stage">
+            <div class="pp11-phone pp11-phone--shot">
+              <img src="assets/images/dos-app.jpg" alt="The DOS application home screen" class="pp11-app-shot" loading="lazy">
+            </div>
+          </div>
+
+          <!-- VIDEO PLACEHOLDER (Higgsfield) -->
+          <div class="pp11-video dos-videoph">
+            <video class="dos-vid" src="assets/videos/product.mp4" autoplay muted loop playsinline preload="metadata"></video>
+            <span class="dos-vid-scrim"></span>
+          </div>
+
+          <!-- workflow -->
+          <div class="pp11-flow">
+            <div class="pp11-flow-line"></div>
+            <div class="pp11-step"><span class="pp11-step-dot">1</span><div class="pp11-step-main"><div class="pp11-step-t">Teacher arrives at school</div></div></div>
+            <div class="pp11-step"><span class="pp11-step-dot">2</span><div class="pp11-step-main"><div class="pp11-step-t">Taps phone on the RFID reader</div></div></div>
+            <div class="pp11-step"><span class="pp11-step-dot">3</span><div class="pp11-step-main"><div class="pp11-step-t">Attendance confirmed instantly</div></div></div>
+            <div class="pp11-step pp11-step--done"><span class="pp11-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="pp11-step-main"><div class="pp11-step-t">Hours automatically tracked</div></div></div>
+          </div>
+        </div>
+
+        <!-- ─── RIGHT: Administrator Experience ─── -->
+        <div class="pp11-card pp11-card--admin">
+          <div class="pp11-card-head">
+            <span class="pp11-card-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M7 13h4M7 16h7"/></svg></span>
+            <div class="pp11-card-titles">
+              <div class="pp11-card-title">Administrator Experience</div>
+              <div class="pp11-card-tag pp11-card-tag--live"><span class="pp11-live-dot"></span>Live dashboard</div>
+            </div>
+            <img src="assets/images/pp7-dashboard.jpg" alt="Director reviewing the dashboard" class="pp11-card-thumb" loading="lazy">
+          </div>
+
+          <!-- premium dashboard mockup (live attendance) -->
+          <div class="pp11-stage">
+            <div class="pp11-dash">
+              <div class="pp11-dash-head">
+                <div><div class="pp11-dash-title">Staff Overview</div><div class="pp11-dash-sub">Real-time attendance</div></div>
+                <span class="pp11-dash-live"><span class="pp11-live-dot"></span>Live</span>
+              </div>
+              <div class="pp11-dash-stats">
+                <div class="pp11-dstat pp11-dstat--green"><div class="pp11-dstat-v"><span class="pp11-count" data-target="12">0</span></div><div class="pp11-dstat-l">Present</div></div>
+                <div class="pp11-dstat pp11-dstat--yellow"><div class="pp11-dstat-v"><span class="pp11-count" data-target="1">0</span></div><div class="pp11-dstat-l">Late</div></div>
+                <div class="pp11-dstat pp11-dstat--red"><div class="pp11-dstat-v"><span class="pp11-count" data-target="2">0</span></div><div class="pp11-dstat-l">Absent</div></div>
+              </div>
+              <div class="pp11-dash-list">
+                <div class="pp11-drow"><span class="pp11-davatar pp11-davatar--blue">MS</span><span class="pp11-dname">M. Santos</span><span class="pp11-dpill pp11-dpill--present">Present</span></div>
+                <div class="pp11-drow"><span class="pp11-davatar pp11-davatar--blue">JR</span><span class="pp11-dname">J. Rodríguez</span><span class="pp11-dpill pp11-dpill--present">Present</span></div>
+                <div class="pp11-drow"><span class="pp11-davatar pp11-davatar--yellow">AV</span><span class="pp11-dname">A. de Vries</span><span class="pp11-dpill pp11-dpill--late">Late · 15m</span></div>
+                <div class="pp11-drow"><span class="pp11-davatar pp11-davatar--blue">DG</span><span class="pp11-dname">D. Girigori</span><span class="pp11-dpill pp11-dpill--present">Present</span></div>
+              </div>
+              <div class="pp11-dash-trend">
+                <div class="pp11-dtrend-l">Weekly Trends</div>
+                <div class="pp11-dbars"><span style="--h:55%"></span><span style="--h:72%"></span><span style="--h:64%"></span><span style="--h:86%"></span><span class="pp11-dbar--hi" style="--h:96%"></span></div>
+                <div class="pp11-ddays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIDEO PLACEHOLDER (Higgsfield) -->
+          <div class="pp11-video dos-videoph">
+            <video class="dos-vid" src="assets/videos/dashboard.mp4" poster="assets/images/Dashboard.png" autoplay muted loop playsinline preload="metadata"></video>
+            <span class="dos-vid-scrim"></span>
+          </div>
+
+          <!-- workflow -->
+          <div class="pp11-flow">
+            <div class="pp11-flow-line"></div>
+            <div class="pp11-step"><span class="pp11-step-dot">1</span><div class="pp11-step-main"><div class="pp11-step-t">Teacher checks in</div></div></div>
+            <div class="pp11-step"><span class="pp11-step-dot">2</span><div class="pp11-step-main"><div class="pp11-step-t">Dashboard updates instantly</div></div></div>
+            <div class="pp11-step"><span class="pp11-step-dot pp11-step-dot--alert">3</span><div class="pp11-step-main"><div class="pp11-step-t">Late arrivals detected</div></div></div>
+            <div class="pp11-step pp11-step--done"><span class="pp11-step-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div class="pp11-step-main"><div class="pp11-step-t">Reports generated automatically</div></div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom benefits -->
+      <div class="pp11-benefits grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="pp11-benefit">
+          <div class="pp11-benefit-stat"><span class="pp11-count" data-target="8">0</span>s</div>
+          <div class="pp11-benefit-t">Attendance In Seconds</div>
+          <div class="pp11-benefit-d">From tap to confirmed.</div>
+        </div>
+        <div class="pp11-benefit">
+          <div class="pp11-benefit-stat"><span class="pp11-count" data-target="100">0</span>%</div>
+          <div class="pp11-benefit-t">Real-Time Visibility</div>
+          <div class="pp11-benefit-d">Every check-in, the moment it happens.</div>
+        </div>
+        <div class="pp11-benefit">
+          <div class="pp11-benefit-stat pp11-benefit-stat--word">1-Click</div>
+          <div class="pp11-benefit-t">Payroll Ready</div>
+          <div class="pp11-benefit-d">Verified hours, ready for payroll.</div>
+        </div>
+        <div class="pp11-benefit pp11-benefit--accent">
+          <div class="pp11-benefit-stat"><span class="pp11-count" data-target="12">0</span></div>
+          <div class="pp11-benefit-t">Built For DOS</div>
+          <div class="pp11-benefit-d">Schools live on the platform.</div>
+        </div>
+      </div>
+
+      <!-- Quality strip -->
+      <div class="pp11-qualities">
+        <div class="pp11-quality">
+          <span class="pp11-quality-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10z"/></svg></span>
+          <div><div class="pp11-quality-t">Clean</div><div class="pp11-quality-s">Modern design</div></div>
+        </div>
+        <div class="pp11-quality">
+          <span class="pp11-quality-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11.5V7a2.5 2.5 0 0 1 5 0v4"/><path d="M14 10a2.5 2.5 0 0 1 5 0v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-5.2-3l-2-3.5s.6-1.4 2-1l1.2 1V9.5"/></svg></span>
+          <div><div class="pp11-quality-t">Intuitive</div><div class="pp11-quality-s">Easy to use</div></div>
+        </div>
+        <div class="pp11-quality">
+          <span class="pp11-quality-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span>
+          <div><div class="pp11-quality-t">Fast</div><div class="pp11-quality-s">Quick actions</div></div>
+        </div>
+        <div class="pp11-quality">
+          <span class="pp11-quality-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          <div><div class="pp11-quality-t">Secure</div><div class="pp11-quality-s">Protected data</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-12  ·  ROLLING OUT ACROSS CURAÇAO (Implementation Journey)
+  ════════════════════════════════════════════════ -->
+  <section class="pp12 relative w-full overflow-hidden py-24 md:py-32" id="roadmap">
+    <div class="absolute inset-0 pp12-bg"></div>
+    <img src="assets/images/pp6-campus.jpg" alt="" aria-hidden="true" class="pp-photobg">
+    <div class="pp12-grid absolute inset-0 pointer-events-none"></div>
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+      <div class="blob blob--blue absolute rounded-full bg-dosblue/[0.06]" style="width:560px;height:560px;top:-8%;left:-6%;"></div>
+      <div class="blob blob--yellow absolute rounded-full bg-dosyellow/[0.05]" style="width:420px;height:420px;bottom:-10%;right:-6%;"></div>
+    </div>
+
+    <div class="relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- Header -->
+      <div class="pp12-head text-center max-w-[800px] mx-auto mb-12">
+        <div class="pp12-eyebrow inline-flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-dosblue/[0.06] border border-dosblue/15 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-dosyellow"></span>
+          <span class="font-mono text-[11px] tracking-[0.14em] text-dosblue uppercase font-medium">Implementation Journey</span>
+        </div>
+        <h2 class="pp12-title font-display font-black text-ink leading-[1.02] tracking-[-0.03em] text-[clamp(32px,4.8vw,58px)] mb-5">
+          Rolling Out Across Curaçao.
+        </h2>
+        <p class="pp12-sub font-body text-[17px] md:text-[18px] leading-relaxed text-slatey">
+          A realistic path from a handful of pilot schools to every public school on the island — watch the DOS network come online, stage by stage.
+        </p>
+      </div>
+
+      <!-- ════ ISLAND DEPLOYMENT MAP + STAGE TIMELINE ════ -->
+      <div class="pp12-journey">
+
+        <!-- map panel -->
+        <div class="pp12-mapcard">
+          <div class="pp12-mapcard-head">
+            <div class="pp12-mapcard-title"><span class="pp12-mc-dot"></span>DOS Network · Curaçao</div>
+            <div class="pp12-livecount"><span class="pp12-livecount-v"><span class="pp12-count" data-target="4">0</span></span><span class="pp12-livecount-l">schools live</span></div>
+          </div>
+          <div class="pp12-map">
+            <div class="pp12-mapinner">
+              <img class="pp12-map-img" src="assets/images/pp12-curacao.jpg" alt="Birdseye aerial view of Curaçao" loading="lazy">
+              <div class="pp12-map-tint"></div>
+              <div class="pp12-mapnodes">
+                <span class="pp12-node" data-stage="1" style="left:33%;top:68%"></span>
+                <span class="pp12-node" data-stage="1" style="left:36%;top:72%"></span>
+                <span class="pp12-node" data-stage="1" style="left:38%;top:78%"></span>
+                <span class="pp12-node" data-stage="1" style="left:30%;top:74%"></span>
+                <span class="pp12-node" data-stage="2" style="left:40%;top:70%"></span>
+                <span class="pp12-node" data-stage="2" style="left:44%;top:62%"></span>
+                <span class="pp12-node" data-stage="2" style="left:48%;top:55%"></span>
+                <span class="pp12-node" data-stage="2" style="left:22%;top:68%"></span>
+                <span class="pp12-node" data-stage="2" style="left:20%;top:80%"></span>
+                <span class="pp12-node" data-stage="2" style="left:14%;top:76%"></span>
+                <span class="pp12-node" data-stage="3" style="left:52%;top:48%"></span>
+                <span class="pp12-node" data-stage="3" style="left:57%;top:40%"></span>
+                <span class="pp12-node" data-stage="3" style="left:62%;top:33%"></span>
+                <span class="pp12-node" data-stage="3" style="left:10%;top:66%"></span>
+                <span class="pp12-node" data-stage="3" style="left:16%;top:90%"></span>
+                <span class="pp12-node" data-stage="3" style="left:8%;top:86%"></span>
+                <span class="pp12-node" data-stage="3" style="left:45%;top:58%"></span>
+                <span class="pp12-node" data-stage="3" style="left:26%;top:64%"></span>
+                <span class="pp12-node" data-stage="4" style="left:67%;top:26%"></span>
+                <span class="pp12-node" data-stage="4" style="left:72%;top:19%"></span>
+                <span class="pp12-node" data-stage="4" style="left:76%;top:13%"></span>
+                <span class="pp12-node" data-stage="4" style="left:17%;top:10%"></span>
+                <span class="pp12-node" data-stage="4" style="left:6%;top:92%"></span>
+                <span class="pp12-node" data-stage="4" style="left:12%;top:60%"></span>
+                <span class="pp12-node" data-stage="4" style="left:24%;top:90%"></span>
+              </div>
+            </div>
+            <div class="pp12-maplegend">
+              <span class="pp12-leg"><span class="pp12-leg-dot pp12-leg-dot--lit"></span>Live</span>
+              <span class="pp12-leg"><span class="pp12-leg-dot"></span>Planned</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- stage timeline (accordion, drives the map) -->
+        <div class="pp12-stages">
+          <button class="pp12-stage selected" data-stage="1">
+            <span class="pp12-stage-num">1</span>
+            <div class="pp12-stage-main">
+              <div class="pp12-stage-top"><span class="pp12-stage-name">Pilot &amp; Foundations</span><span class="pp12-stage-count">4 schools</span></div>
+              <div class="pp12-stage-detail">
+                <img class="pp12-stage-img" src="assets/images/pp12-phase1.jpg" alt="Configuring RFID at a pilot school" loading="lazy">
+                <ul class="pp12-stage-points"><li>Select the first pilot schools</li><li>Install RFID readers &amp; train staff</li></ul>
+              </div>
+            </div>
+          </button>
+          <button class="pp12-stage" data-stage="2">
+            <span class="pp12-stage-num">2</span>
+            <div class="pp12-stage-main">
+              <div class="pp12-stage-top"><span class="pp12-stage-name">Adoption &amp; Impact</span><span class="pp12-stage-count">10 schools</span></div>
+              <div class="pp12-stage-detail">
+                <img class="pp12-stage-img" src="assets/images/pp12-phase2.jpg" alt="Teacher onboarding" loading="lazy">
+                <ul class="pp12-stage-points"><li>Teachers adopt tap check-in</li><li>Attendance accuracy improves immediately</li></ul>
+              </div>
+            </div>
+          </button>
+          <button class="pp12-stage" data-stage="3">
+            <span class="pp12-stage-num">3</span>
+            <div class="pp12-stage-main">
+              <div class="pp12-stage-top"><span class="pp12-stage-name">Insight &amp; Payroll</span><span class="pp12-stage-count">18 schools</span></div>
+              <div class="pp12-stage-detail">
+                <img class="pp12-stage-img" src="assets/images/pp12-phase3.jpg" alt="Expanding to more schools" loading="lazy">
+                <ul class="pp12-stage-points"><li>Real-time data visibility for directors</li><li>Automated payroll integration</li></ul>
+              </div>
+            </div>
+          </button>
+          <button class="pp12-stage pp12-stage--final" data-stage="4">
+            <span class="pp12-stage-num">4</span>
+            <div class="pp12-stage-main">
+              <div class="pp12-stage-top"><span class="pp12-stage-name">Island-Wide</span><span class="pp12-stage-count">25+ schools</span></div>
+              <div class="pp12-stage-detail">
+                <img class="pp12-stage-img" src="assets/images/pp12-phase4.jpg" alt="DOS-wide oversight" loading="lazy">
+                <ul class="pp12-stage-points"><li>Scaled to every DOS school</li><li>One unified platform, island-wide</li></ul>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ════ BEFORE / AFTER TRANSFORMATION ════ -->
+      <div class="pp12-ba-head">The transformation, in every school</div>
+      <div class="pp12-batable">
+        <div class="pp12-barow pp12-barow--head"><span class="pp12-balabel"></span><span class="pp12-bacol pp12-bacol--before">Before DOS</span><span class="pp12-bacol pp12-bacol--after">With DOS</span></div>
+        <div class="pp12-barow"><span class="pp12-balabel">Attendance accuracy</span><span class="pp12-baval pp12-baval--before">Paper &amp; guesswork</span><span class="pp12-baval pp12-baval--after"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>100% verified</span></div>
+        <div class="pp12-barow"><span class="pp12-balabel">Payroll preparation</span><span class="pp12-baval pp12-baval--before">8–12 hours</span><span class="pp12-baval pp12-baval--after"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Minutes</span></div>
+        <div class="pp12-barow"><span class="pp12-balabel">Data visibility</span><span class="pp12-baval pp12-baval--before">Delayed / none</span><span class="pp12-baval pp12-baval--after"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Real-time</span></div>
+        <div class="pp12-barow"><span class="pp12-balabel">Admin workload</span><span class="pp12-baval pp12-baval--before">Heavy &amp; manual</span><span class="pp12-baval pp12-baval--after"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Automated</span></div>
+      </div>
+
+      <!-- ════ ONGOING SUPPORT ════ -->
+      <div class="pp12-support">
+        <div class="pp12-supcard">
+          <span class="pp12-supcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2.5 3 6 3s6-2 6-3v-5"/></svg></span>
+          <div class="pp12-supcard-t">Teacher Training</div>
+          <div class="pp12-supcard-d">Video tutorials, onboarding workshops and implementation guides.</div>
+        </div>
+        <div class="pp12-supcard">
+          <span class="pp12-supcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.9 4.9 4.2 4.2M14.9 14.9l4.2 4.2M14.9 9.1l4.2-4.2M4.9 19.1l4.2-4.2"/></svg></span>
+          <div class="pp12-supcard-t">Implementation Support</div>
+          <div class="pp12-supcard-d">Dedicated assistance during rollout and adoption.</div>
+        </div>
+        <div class="pp12-supcard">
+          <span class="pp12-supcard-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 22v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M21 15a9 9 0 0 1-14.85 3.36L3 16"/></svg></span>
+          <div class="pp12-supcard-t">Optimization &amp; Feedback</div>
+          <div class="pp12-supcard-d">Continuous improvements based on real operational experience.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       PP-13  ·  THE VISION (Cinematic Finale)
+  ════════════════════════════════════════════════ -->
+  <section class="pp13" id="vision">
+    <!-- full-bleed cinematic background -->
+    <div class="pp13-bg">
+      <img src="assets/images/pp13-vision.jpg" alt="Modern connected school campuses across Curaçao at golden hour" class="pp13-bg-img">
+      <div class="pp13-bg-wash"></div>
+      <div class="pp13-bg-glow"></div>
+      <!-- connected island network overlay (data flowing between schools) -->
+      <svg class="pp13-net" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <path id="pp13netpath" class="pp13-netpath" d="M120 300 L280 250 L440 290 L600 240 L780 280 L940 235 L1120 275 L1300 250" fill="none"/>
+        <g class="pp13-netmesh" fill="none">
+          <path class="pp13-netline" d="M120 300 L280 250"/>
+          <path class="pp13-netline" d="M280 250 L440 290"/>
+          <path class="pp13-netline" d="M440 290 L600 240"/>
+          <path class="pp13-netline" d="M600 240 L780 280"/>
+          <path class="pp13-netline" d="M780 280 L940 235"/>
+          <path class="pp13-netline" d="M940 235 L1120 275"/>
+          <path class="pp13-netline" d="M1120 275 L1300 250"/>
+          <path class="pp13-netline" d="M280 250 L600 240"/>
+          <path class="pp13-netline" d="M600 240 L940 235"/>
+          <path class="pp13-netline" d="M940 235 L1300 250"/>
+        </g>
+        <g class="pp13-netnodes">
+          <circle class="pp13-nnode" data-i="0" cx="120" cy="300" r="6"/>
+          <circle class="pp13-nnode" data-i="1" cx="280" cy="250" r="6"/>
+          <circle class="pp13-nnode" data-i="2" cx="440" cy="290" r="6"/>
+          <circle class="pp13-nnode" data-i="3" cx="600" cy="240" r="6"/>
+          <circle class="pp13-nnode" data-i="4" cx="780" cy="280" r="6"/>
+          <circle class="pp13-nnode" data-i="5" cx="940" cy="235" r="6"/>
+          <circle class="pp13-nnode" data-i="6" cx="1120" cy="275" r="6"/>
+          <circle class="pp13-nnode" data-i="7" cx="1300" cy="250" r="6"/>
+        </g>
+        <circle class="pp13-netpulse" r="5"/>
+      </svg>
+    </div>
+
+    <!-- floating live overlays -->
+    <div class="pp13-overlay pp13-overlay-1"><span class="pp13-ov-dot"></span><span><strong><span class="pp13-count" data-target="2847">0</span></strong> teachers checked in today</span></div>
+    <div class="pp13-overlay pp13-overlay-2"><span class="pp13-ov-v"><span class="pp13-count" data-target="12">0</span></span><span class="pp13-ov-l">schools online now</span></div>
+
+    <div class="pp13-inner relative z-10 max-w-[1280px] mx-auto px-5 md:px-10">
+
+      <!-- header -->
+      <div class="pp13-head">
+        <div class="pp13-eyebrow"><span class="pp13-eb-dot"></span>The Vision · DOS Curaçao</div>
+        <h2 class="pp13-title">This Is Bigger<br>Than Attendance.</h2>
+        <p class="pp13-sub">DOS is building the digital infrastructure for the future of education across Curaçao — and it starts with a single check-in.</p>
+      </div>
+
+      <!-- manifesto -->
+      <div class="pp13-manifesto">
+        <div class="pp13-line">Every School Connected.</div>
+        <div class="pp13-line">Every Teacher Accounted For.</div>
+        <div class="pp13-line">Every Decision Informed.</div>
+        <div class="pp13-line pp13-line--accent">Powered By DOS.</div>
+      </div>
+
+      <!-- impact band -->
+      <div class="pp13-impact">
+        <div class="pp13-stat"><div class="pp13-stat-v"><span class="pp13-count" data-target="25">0</span>+</div><div class="pp13-stat-l">Schools Connected</div></div>
+        <div class="pp13-stat"><div class="pp13-stat-v"><span class="pp13-count" data-target="2847">0</span></div><div class="pp13-stat-l">Teachers Accounted For</div></div>
+        <div class="pp13-stat"><div class="pp13-stat-v"><span class="pp13-count" data-target="100">0</span>%</div><div class="pp13-stat-l">Real-Time Visibility</div></div>
+        <div class="pp13-stat pp13-stat--accent"><div class="pp13-stat-v">1</div><div class="pp13-stat-l">Unified Platform</div></div>
+      </div>
+
+      <!-- cinematic video centerpiece -->
+      <div class="pp13-videowrap">
+        <div class="pp13-video dos-videoph">
+          <video class="dos-vid" src="assets/videos/vision.mp4" poster="assets/images/pp13-vision.jpg" autoplay muted loop playsinline preload="metadata"></video>
+          <span class="dos-vid-scrim"></span>
+          <div class="pp13-video-final">
+            <div class="pp13-vf"><span class="pp13-vf-v">25+</span><span class="pp13-vf-l">Schools Connected</span></div>
+            <div class="pp13-vf-sep"></div>
+            <div class="pp13-vf"><span class="pp13-vf-v">One</span><span class="pp13-vf-l">Unified Platform</span></div>
+          </div>
+        </div>
+        <div class="pp13-storyboard">Teacher arrives → RFID verification → Dashboard updates → Schools connect → Curaçao lights up → Network activates → Future ecosystem</div>
+      </div>
+
+      <!-- closing -->
+      <div class="pp13-close">
+        <p class="pp13-close-line">DOS isn't just solving attendance.<br><strong>It's building the future of education in Curaçao.</strong></p>
+        <a href="#vision" class="pp13-cta">Request a Demo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════════ -->
+  <footer class="site-foot">
+    <div class="site-foot-bar"></div>
+    <div class="max-w-[1280px] mx-auto px-5 md:px-10 py-8">
+      <div class="site-foot-brand">
+        <img src="assets/logos/dos-lockup.png" alt="Dienst Openbare Scholen — Ministerie van Onderwijs, Wetenschap, Cultuur &amp; Sport" class="site-foot-logo">
+        <p class="site-foot-tagline">The digital infrastructure for the future of education in Curaçao.</p>
+      </div>
+      <nav class="site-foot-links">
+        <a href="#network">Platform</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#data-flow">Technology</a>
+        <a href="#command-center">Dashboard</a>
+        <a href="#vision">Request Demo</a>
+      </nav>
+      <div class="site-foot-bottom">
+        <span>© 2026 Dienst Openbare Scholen · Curaçao. All rights reserved.</span>
+        <span class="font-mono text-[11px] text-slatey">Workforce Management Platform · v1.0</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/nav.js"></script>
+  <script src="js/hero.js"></script>
+  <script src="js/pp2.js"></script>
+  <script src="js/pp3.js"></script>
+  <script src="js/pp4.js"></script>
+  <script src="js/pp5.js"></script>
+  <script src="js/pp6.js"></script>
+  <script src="js/pp7.js"></script>
+  <script src="js/pp8.js"></script>
+  <script src="js/pp9.js"></script>
+  <script src="js/pp10.js"></script>
+  <script src="js/pp11.js"></script>
+  <script src="js/pp12.js"></script>
+  <script src="js/pp13.js"></script>
+</body>
+</html>
